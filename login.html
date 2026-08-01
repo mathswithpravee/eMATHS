@@ -62,12 +62,14 @@ button{
 import { initializeApp } 
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
-import { getAuth, signInWithEmailAndPassword }
+import { getAuth, signInWithEmailAndPassword } 
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
+import { getFirestore, doc, getDoc } 
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyAI-rbO_z9fzIZicTW2SlI0cj__R1Ji6GM",
+
+const firebaseConfig = { apiKey: "AIzaSyAI-rbO_z9fzIZicTW2SlI0cj__R1Ji6GM",
   authDomain: "emaths-db8a2.firebaseapp.com",
   projectId: "emaths-db8a2",
   storageBucket: "emaths-db8a2.firebasestorage.app",
@@ -77,24 +79,56 @@ const firebaseConfig = {
 
 
 const app = initializeApp(firebaseConfig);
+
 const auth = getAuth(app);
+const db = getFirestore(app);
 
 
-window.login = function(){
 
-let email = document.getElementById("email").value;
-let password = document.getElementById("password").value;
+window.login = async function(){
+
+const indexNo = document.getElementById("indexNo").value;
+const password = document.getElementById("password").value;
 
 
-signInWithEmailAndPassword(auth,email,password)
+try {
 
-.then(()=>{
-document.getElementById("message").innerHTML="Login Successful!";
-})
+    // Find student by index number
+    const studentRef = doc(db, "students", indexNo);
+    const studentSnap = await getDoc(studentRef);
 
-.catch(()=>{
-document.getElementById("message").innerHTML="Login Failed!";
-});
+
+    if(studentSnap.exists()){
+
+        const studentData = studentSnap.data();
+
+        // Login using stored email
+        await signInWithEmailAndPassword(
+            auth,
+            studentData.email,
+            password
+        );
+
+
+        document.getElementById("message").innerHTML =
+        "Login Successful!";
+
+
+    }else{
+
+        document.getElementById("message").innerHTML =
+        "Invalid Index Number";
+
+    }
+
+
+} catch(error){
+
+    document.getElementById("message").innerHTML =
+    "Wrong Password";
+
+}
+
 
 }
 
