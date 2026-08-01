@@ -75,7 +75,6 @@ border-radius:5px;
 }
 
 
-
 </style>
 
 </head>
@@ -102,6 +101,7 @@ border-radius:5px;
 
 
 <select id="gradeSelect" onchange="loadVideos()">
+
 
 
 <option value="">
@@ -147,8 +147,8 @@ Grade 11
 
 
 
-<div id="videoList">
 
+<div id="videoList">
 
 </div>
 
@@ -156,80 +156,50 @@ Grade 11
 
 
 
-<script>
+
+<script type="module">
 
 
-const videos = {
+import { initializeApp }
+
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 
-6:[
 
-{
-name:"Grade 6 - Algebra Introduction",
-id:"YOUTUBE_ID_1"
-},
+import {
 
-{
-name:"Grade 6 - Fractions",
-id:"YOUTUBE_ID_2"
+getFirestore,
+
+collection,
+
+getDocs,
+
+query,
+
+where
+
 }
 
-],
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
 
-7:[
-
-{
-name:"Grade 7 - Algebra",
-id:"YOUTUBE_ID_3"
-}
-
-],
 
 
-
-8:[
-
-{
-name:"Grade 8 - Equations",
-id:"YOUTUBE_ID_4"
-}
-
-],
+const firebaseConfig = {
 
 
+apiKey: "AIzaSyAI-rbO_z9fzIZicTW2SlI0cj__R1Ji6GM",
 
-9:[
+authDomain: "emaths-db8a2.firebaseapp.com",
 
-{
-name:"Grade 9 - Geometry",
-id:"YOUTUBE_ID_5"
-}
+projectId: "emaths-db8a2",
 
-],
+storageBucket: "emaths-db8a2.firebasestorage.app",
 
+messagingSenderId: "790474740591",
 
-
-10:[
-
-{
-name:"Grade 10 - O/L Mathematics",
-id:"YOUTUBE_ID_6"
-}
-
-],
-
-
-
-11:[
-
-{
-name:"Grade 11 - Revision",
-id:"YOUTUBE_ID_7"
-}
-
-]
+appId: "1:790474740591:web:a54ea2419f29c0178a8e9a"
 
 
 };
@@ -238,16 +208,30 @@ id:"YOUTUBE_ID_7"
 
 
 
-function loadVideos(){
+const app = initializeApp(firebaseConfig);
+
+
+const db = getFirestore(app);
+
+
+
+
+
+
+window.loadVideos = async function(){
+
 
 
 const grade =
+
 document.getElementById("gradeSelect").value;
 
 
 
 const box =
+
 document.getElementById("videoList");
+
 
 
 box.innerHTML="";
@@ -258,29 +242,92 @@ if(grade=="") return;
 
 
 
-videos[grade].forEach(video=>{
 
 
-box.innerHTML += `
+const q =
 
+query(
+
+collection(db,"videos"),
+
+where("grade","==",grade)
+
+);
+
+
+
+
+
+
+const snapshot =
+
+await getDocs(q);
+
+
+
+
+
+
+if(snapshot.empty){
+
+
+box.innerHTML =
+
+`
+
+<div class="card">
+
+<h3>No Videos Available</h3>
+
+</div>
+
+`;
+
+
+return;
+
+
+}
+
+
+
+
+
+snapshot.forEach((doc)=>{
+
+
+
+const data = doc.data();
+
+
+
+
+box.innerHTML +=
+
+
+
+`
 
 <div class="card video">
 
 
-<h3>${video.name}</h3>
+<h3>${data.name}</h3>
 
 
-<img src="https://img.youtube.com/vi/${video.id}/hqdefault.jpg">
+<img src="${data.thumbnail}">
+
 
 
 <br><br>
 
 
-<button onclick="openVideo('${video.id}')">
+
+<button onclick="openVideo('${data.link}')">
 
 ▶ Watch Video
 
 </button>
+
 
 
 </div>
@@ -289,25 +336,31 @@ box.innerHTML += `
 `;
 
 
+
+
 });
 
 
-}
+
+};
 
 
 
 
 
-function openVideo(id){
 
 
-window.open(
-"https://www.youtube.com/watch?v="+id,
-"_blank"
-);
+
+window.openVideo = function(link){
 
 
-}
+window.open(link,"_blank");
+
+
+};
+
+
+
 
 
 </script>
