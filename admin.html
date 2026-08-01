@@ -101,8 +101,33 @@ Save Student
 
 <br><br>
 
-<input id="percentage" placeholder="Percentage">
+<input id="percentage" placeholder="Percentage" readonly>
+<script>
 
+document.getElementById("marks").addEventListener("input", calculatePercentage);
+
+document.getElementById("total").addEventListener("input", calculatePercentage);
+
+
+function calculatePercentage(){
+
+let marks = document.getElementById("marks").value;
+
+let total = document.getElementById("total").value;
+
+
+if(marks && total){
+
+let percentage = (marks / total) * 100;
+
+document.getElementById("percentage").value =
+percentage.toFixed(2);
+
+}
+
+}
+
+</script>
 <br><br>
 
 <input id="rank" placeholder="Rank">
