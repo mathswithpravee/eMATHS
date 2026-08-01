@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Video Lessons - Maths with Pravee</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+<style>
+
+body{
+font-family:Arial;
+background:#f4f7fb;
+text-align:center;
+}
+
+
+.header{
+background:#1e88e5;
+color:white;
+padding:20px;
+}
+
+
+.card{
+
+background:white;
+width:90%;
+max-width:700px;
+margin:20px auto;
+padding:20px;
+border-radius:10px;
+
+}
+
+
+select{
+
+width:80%;
+padding:12px;
+font-size:16px;
+
+}
+
+
+
+.video{
+
+background:#eee;
+margin:20px;
+padding:15px;
+border-radius:10px;
+
+}
+
+
+.video img{
+
+width:100%;
+border-radius:10px;
+
+}
+
+
+.video button{
+
+background:#1e88e5;
+color:white;
+border:none;
+padding:12px 20px;
+border-radius:5px;
+
+}
+
+
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="header">
+
+<h1>🎥 Maths Lessons</h1>
+
+<h3>Maths with Pravee</h3>
+
+</div>
+
+
+
+
+<div class="card">
+
+
+<h2>Select Grade</h2>
+
+
+<select id="gradeSelect" onchange="loadVideos()">
+
+
+<option value="">
+Select Grade
+</option>
+
+
+<option value="6">
+Grade 6
+</option>
+
+
+<option value="7">
+Grade 7
+</option>
+
+
+<option value="8">
+Grade 8
+</option>
+
+
+<option value="9">
+Grade 9
+</option>
+
+
+<option value="10">
+Grade 10
+</option>
+
+
+<option value="11">
+Grade 11
+</option>
+
+
+</select>
+
+
+</div>
+
+
+
+
+<div id="videoList">
+
+
+</div>
+
+
+
+
+
+<script>
+
+
+const videos = {
+
+
+6:[
+
+{
+name:"Grade 6 - Algebra Introduction",
+id:"YOUTUBE_ID_1"
+},
+
+{
+name:"Grade 6 - Fractions",
+id:"YOUTUBE_ID_2"
+}
+
+],
+
+
+
+7:[
+
+{
+name:"Grade 7 - Algebra",
+id:"YOUTUBE_ID_3"
+}
+
+],
+
+
+
+8:[
+
+{
+name:"Grade 8 - Equations",
+id:"YOUTUBE_ID_4"
+}
+
+],
+
+
+
+9:[
+
+{
+name:"Grade 9 - Geometry",
+id:"YOUTUBE_ID_5"
+}
+
+],
+
+
+
+10:[
+
+{
+name:"Grade 10 - O/L Mathematics",
+id:"YOUTUBE_ID_6"
+}
+
+],
+
+
+
+11:[
+
+{
+name:"Grade 11 - Revision",
+id:"YOUTUBE_ID_7"
+}
+
+]
+
+
+};
+
+
+
+
+
+function loadVideos(){
+
+
+const grade =
+document.getElementById("gradeSelect").value;
+
+
+
+const box =
+document.getElementById("videoList");
+
+
+box.innerHTML="";
+
+
+
+if(grade=="") return;
+
+
+
+videos[grade].forEach(video=>{
+
+
+box.innerHTML += `
+
+
+<div class="card video">
+
+
+<h3>${video.name}</h3>
+
+
+<img src="https://img.youtube.com/vi/${video.id}/hqdefault.jpg">
+
+
+<br><br>
+
+
+<button onclick="openVideo('${video.id}')">
+
+▶ Watch Video
+
+</button>
+
+
+</div>
+
+
+`;
+
+
+});
+
+
+}
+
+
+
+
+
+function openVideo(id){
+
+
+window.open(
+"https://www.youtube.com/watch?v="+id,
+"_blank"
+);
+
+
+}
+
+
+</script>
+
+
+
+</body>
+
+</html>
