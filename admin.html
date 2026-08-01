@@ -289,6 +289,57 @@ Delete Marks
 
 
 </div>
+<!-- VIDEO MANAGEMENT -->
+
+<div class="card">
+
+<h2>🎥 Manage Lessons</h2>
+
+
+<select id="videoGrade">
+
+<option value="">Select Grade</option>
+
+<option value="6">Grade 6</option>
+<option value="7">Grade 7</option>
+<option value="8">Grade 8</option>
+<option value="9">Grade 9</option>
+<option value="10">Grade 10</option>
+<option value="11">Grade 11</option>
+
+</select>
+
+
+<br><br>
+
+
+<input id="videoName" placeholder="Video Name">
+
+
+<br><br>
+
+
+<input id="youtubeLink" placeholder="YouTube Link">
+
+
+<br><br>
+
+
+<input id="thumbnail" placeholder="Thumbnail URL">
+
+
+<br><br>
+
+
+<button onclick="addVideo()">
+Add Video
+</button>
+
+
+<p id="videoMessage"></p>
+
+
+</div>
 <!-- ADD MARKS -->
 
 <div class="card">
@@ -1564,7 +1615,80 @@ error.message;
 
 };
 
+// ========================
+// ADD VIDEO LESSON
+// ========================
 
+
+window.addVideo = async function(){
+
+
+try{
+
+
+const grade =
+document.getElementById("videoGrade").value;
+
+
+const name =
+document.getElementById("videoName").value;
+
+
+const link =
+document.getElementById("youtubeLink").value;
+
+
+const thumbnail =
+document.getElementById("thumbnail").value;
+
+
+
+const videoID =
+Date.now().toString();
+
+
+
+await setDoc(
+
+doc(
+db,
+"videos",
+videoID
+),
+
+{
+
+grade:grade,
+
+name:name,
+
+link:link,
+
+thumbnail:thumbnail
+
+}
+
+);
+
+
+
+document.getElementById("videoMessage").innerHTML =
+"Video Added Successfully ✅";
+
+
+}
+
+catch(error){
+
+
+document.getElementById("videoMessage").innerHTML =
+error.message;
+
+
+}
+
+
+};
 </script>
 
 
