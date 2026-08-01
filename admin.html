@@ -41,8 +41,12 @@ border-radius:5px;
 cursor:pointer;
 }
 
-table{
-width:100%;
+.success{
+color:green;
+}
+
+.error{
+color:red;
 }
 
 </style>
@@ -75,12 +79,12 @@ width:100%;
 <br><br>
 
 
-<input id="name" placeholder="Student Name">
+<input id="studentName" placeholder="Student Name">
 
 <br><br>
 
 
-<input id="grade" placeholder="Grade">
+<input id="studentGrade" placeholder="Grade">
 
 <br><br>
 
@@ -91,6 +95,7 @@ width:100%;
 
 
 <input id="password" placeholder="Password">
+
 
 <br><br>
 
@@ -125,6 +130,7 @@ Save Student
 Select Grade
 </option>
 
+
 <option value="6">Grade 6</option>
 
 <option value="7">Grade 7</option>
@@ -142,6 +148,23 @@ Select Grade
 
 
 <br><br>
+
+
+
+
+<select id="studentSelect">
+
+
+<option value="">
+Select Student
+</option>
+
+
+</select>
+
+
+<br><br>
+
 
 
 
@@ -177,24 +200,6 @@ Paper Class
 
 
 
-<select id="markIndex">
-
-
-<option value="">
-Select Student
-</option>
-
-
-</select>
-
-
-<br><br>
-
-
-
-
-
-<!-- MONTHLY -->
 
 <div id="monthlyBox" style="display:none;">
 
@@ -221,7 +226,6 @@ Select Year
 
 
 <br><br>
-
 
 
 
@@ -267,8 +271,6 @@ Select Month
 
 
 
-<!-- TERM -->
-
 <div id="termBox" style="display:none;">
 
 
@@ -304,8 +306,6 @@ Term 3
 
 
 
-<!-- PAPER -->
-
 <div id="paperBox" style="display:none;">
 
 
@@ -319,12 +319,10 @@ Term 3
 <br><br>
 
 
-
 <input id="marks" placeholder="Marks">
 
 
 <br><br>
-
 
 
 <input id="total" placeholder="Total Marks">
@@ -333,12 +331,10 @@ Term 3
 <br><br>
 
 
-
 <input id="percentage" placeholder="Percentage" readonly>
 
 
 <br><br>
-
 
 
 <button onclick="addMarks()">
@@ -396,97 +392,9 @@ const db = getFirestore(app);
 
 
 
-// =========================
-// LOAD STUDENTS BY GRADE
-// =========================
-
-
-const gradeSelect =
-document.getElementById("markGrade");
-
-
-const studentSelect =
-document.getElementById("markIndex");
-
-
-
-gradeSelect.addEventListener("change", async function(){
-
-
-studentSelect.innerHTML =
-
-`
-<option value="">
-Select Student
-</option>
-`;
-
-
-
-const selectedGrade =
-gradeSelect.value;
-
-
-
-const studentsRef =
-collection(db,"students");
-
-
-
-const snapshot =
-await getDocs(studentsRef);
-
-
-
-snapshot.forEach((student)=>{
-
-
-const data =
-student.data();
-
-
-
-if(String(data.grade) === String(selectedGrade)){
-
-
-
-let option =
-document.createElement("option");
-
-
-
-option.value =
-student.id;
-
-
-
-option.textContent =
-student.id + " - " + data.name;
-
-
-
-studentSelect.appendChild(option);
-
-
-
-}
-
-
-
-});
-
-
-});
-
-
-
-
-
-
-
-// =========================
+// ==========================
 // ADD STUDENT
-// =========================
+// ==========================
 
 
 window.addStudent = async function(){
@@ -496,27 +404,42 @@ try{
 
 
 const indexNo =
-document.getElementById("indexNo").value;
+document.getElementById("indexNo").value.trim();
 
 
 
 const name =
-document.getElementById("name").value;
+document.getElementById("studentName").value.trim();
 
 
 
 const grade =
-document.getElementById("grade").value;
+document.getElementById("studentGrade").value.trim();
 
 
 
 const email =
-document.getElementById("email").value;
+document.getElementById("email").value.trim();
 
 
 
 const password =
-document.getElementById("password").value;
+document.getElementById("password").value.trim();
+
+
+
+
+if(indexNo=="" || name=="" || grade==""){
+
+
+document.getElementById("message").innerHTML =
+"Please fill Index, Name and Grade ❌";
+
+
+return;
+
+}
+
 
 
 
@@ -548,8 +471,8 @@ document.getElementById("message").innerHTML =
 
 
 
-}
 
+}
 
 catch(error){
 
@@ -565,17 +488,111 @@ error.message;
 
 };
 
-// =========================
+
+
+
+
+
+
+// ==========================
+// LOAD STUDENTS BY GRADE
+// ==========================
+
+
+const gradeSelect =
+document.getElementById("markGrade");
+
+
+const studentSelect =
+document.getElementById("studentSelect");
+
+
+
+
+gradeSelect.addEventListener("change",async function(){
+
+
+
+studentSelect.innerHTML =
+
+`
+<option value="">
+Select Student
+</option>
+`;
+
+
+
+const selectedGrade =
+gradeSelect.value;
+
+
+
+const studentsRef =
+collection(db,"students");
+
+
+
+const snapshot =
+await getDocs(studentsRef);
+
+
+
+
+snapshot.forEach((student)=>{
+
+
+const data =
+student.data();
+
+
+
+
+// grade match
+
+if(String(data.grade)==String(selectedGrade)){
+
+
+
+let option =
+document.createElement("option");
+
+
+
+option.value =
+student.id;
+
+
+
+option.textContent =
+student.id+" - "+data.name;
+
+
+
+studentSelect.appendChild(option);
+
+
+
+}
+
+
+
+});
+
+
+
+});
+
+// ==========================
 // TEST TYPE CHANGE
-// =========================
+// ==========================
 
 
-const testTypeSelect =
+const testType =
 document.getElementById("testType");
 
 
-
-testTypeSelect.addEventListener("change",function(){
+testType.addEventListener("change",function(){
 
 
 document.getElementById("monthlyBox").style.display="none";
@@ -588,27 +605,19 @@ document.getElementById("paperBox").style.display="none";
 
 if(this.value=="Monthly"){
 
-
 document.getElementById("monthlyBox").style.display="block";
 
-
 }
-
 
 else if(this.value=="Term"){
 
-
 document.getElementById("termBox").style.display="block";
-
 
 }
 
-
 else if(this.value=="Paper"){
 
-
 document.getElementById("paperBox").style.display="block";
-
 
 }
 
@@ -619,14 +628,13 @@ document.getElementById("paperBox").style.display="block";
 
 
 
-// =========================
-// PERCENTAGE CALCULATION
-// =========================
+// ==========================
+// PERCENTAGE AUTO CALCULATE
+// ==========================
 
 
 document.getElementById("marks")
 .addEventListener("input",calculatePercentage);
-
 
 
 document.getElementById("total")
@@ -637,12 +645,11 @@ document.getElementById("total")
 function calculatePercentage(){
 
 
-const marks =
+let marks =
 Number(document.getElementById("marks").value);
 
 
-
-const total =
+let total =
 Number(document.getElementById("total").value);
 
 
@@ -650,31 +657,26 @@ Number(document.getElementById("total").value);
 if(total>0){
 
 
-const percentage =
-(marks/total)*100;
-
-
-
 document.getElementById("percentage").value =
 
-percentage.toFixed(2);
-
-
-
-}
+((marks/total)*100).toFixed(2);
 
 
 }
 
 
 
+}
 
 
 
 
-// =========================
-// ADD MARKS
-// =========================
+
+
+
+// ==========================
+// SAVE MARKS
+// ==========================
 
 
 window.addMarks = async function(){
@@ -683,13 +685,17 @@ window.addMarks = async function(){
 try{
 
 
-
 const indexNo =
-document.getElementById("markIndex").value;
+document.getElementById("studentSelect").value;
 
 
 
-const testType =
+const grade =
+document.getElementById("markGrade").value;
+
+
+
+const type =
 document.getElementById("testType").value;
 
 
@@ -701,19 +707,25 @@ let examName="";
 
 
 
-// MONTHLY
+// Monthly
 
-if(testType=="Monthly"){
+if(type=="Monthly"){
 
 
-
-const year =
+let year =
 document.getElementById("year").value;
 
 
-
-const month =
+let month =
 document.getElementById("month").value;
+
+
+
+if(year=="" || month==""){
+
+throw new Error("Select Year and Month");
+
+}
 
 
 
@@ -722,29 +734,8 @@ year+"-"+month;
 
 
 
-const monthNames=[
-
-"",
-"January",
-"February",
-"March",
-"April",
-"May",
-"June",
-"July",
-"August",
-"September",
-"October",
-"November",
-"December"
-
-];
-
-
-
 examName =
-monthNames[Number(month)]+" Monthly Test";
-
+month+" Monthly Test";
 
 
 }
@@ -752,66 +743,64 @@ monthNames[Number(month)]+" Monthly Test";
 
 
 
-// TERM
+// Term
 
-else if(testType=="Term"){
-
-
-
-const year =
-document.getElementById("year").value;
+else if(type=="Term"){
 
 
-
-const term =
+let term =
 document.getElementById("term").value;
 
 
 
-examId =
-year+"-Term"+term;
+if(term==""){
 
+throw new Error("Select Term");
+
+}
+
+
+
+examId =
+"Term-"+term;
 
 
 examName =
 "Term "+term+" Test";
 
 
-
 }
 
 
 
 
+// Paper
 
-// PAPER
-
-else if(testType=="Paper"){
-
+else if(type=="Paper"){
 
 
-const year =
-document.getElementById("year").value;
-
-
-
-const paperNo =
+let paper =
 document.getElementById("paperNo").value;
 
 
 
-examId =
-year+"-Paper"+paperNo;
+if(paper==""){
 
-
-
-examName =
-"Paper Class "+paperNo;
-
-
+throw new Error("Enter Paper Number");
 
 }
 
+
+
+examId =
+"Paper-"+paper;
+
+
+examName =
+"Paper Class "+paper;
+
+
+}
 
 
 
@@ -819,7 +808,6 @@ examName =
 
 const marks =
 Number(document.getElementById("marks").value);
-
 
 
 const total =
@@ -832,21 +820,29 @@ Number(((marks/total)*100).toFixed(2));
 
 
 
+if(indexNo==""){
+
+throw new Error("Select Student");
+
+}
+
+
+
+
+
+// Rank calculation
+
+
 let rank=1;
 
 
 
-const grade =
-document.getElementById("markGrade").value;
-
-
-
-const studentsSnap =
+const students =
 await getDocs(collection(db,"students"));
 
 
 
-for(const student of studentsSnap.docs){
+for(const student of students.docs){
 
 
 
@@ -885,24 +881,23 @@ if(oldSnap.exists()){
 
 
 
-const oldData =
+const old =
 oldSnap.data();
 
 
 
-if(oldData.percentage > percentage){
+if(old.percentage > percentage){
 
 rank++;
 
 }
 
 
-
 }
 
 
-}
 
+}
 
 
 }
@@ -930,9 +925,10 @@ examId
 
 {
 
+
 exam:examName,
 
-testType:testType,
+testType:type,
 
 marks:marks,
 
@@ -972,3 +968,11 @@ error.message;
 
 
 };
+
+
+</script>
+
+
+</body>
+
+</html>
