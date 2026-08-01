@@ -188,7 +188,51 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 const db = getFirestore(app);
+const gradeSelect = document.getElementById("markGrade");
+const studentSelect = document.getElementById("markIndex");
 
+
+gradeSelect.addEventListener("change", async function(){
+
+studentSelect.innerHTML =
+'<option value="">Select Student</option>';
+
+
+const selectedGrade = gradeSelect.value;
+
+
+const studentsRef = collection(db,"students");
+
+const snapshot = await getDocs(studentsRef);
+
+
+snapshot.forEach((student)=>{
+
+const data = student.data();
+
+
+if(data.grade == selectedGrade){
+
+
+let option = document.createElement("option");
+
+
+option.value = student.id;
+
+
+option.textContent =
+student.id + " - " + data.name;
+
+
+studentSelect.appendChild(option);
+
+
+}
+
+});
+
+
+});
 
 window.addStudent = async function(){
 
