@@ -77,7 +77,46 @@ Save Student
 <p id="message"></p>
 
 </div>
+<div class="card">
 
+<h2>📊 Add Monthly Marks</h2>
+
+<input id="markIndex" placeholder="Student Index No">
+
+<br><br>
+
+<input id="exam" placeholder="Exam Name">
+
+<br><br>
+
+<input id="month" placeholder="Month (2026-08)">
+
+<br><br>
+
+<input id="marks" placeholder="Marks">
+
+<br><br>
+
+<input id="total" placeholder="Total Marks">
+
+<br><br>
+
+<input id="percentage" placeholder="Percentage">
+
+<br><br>
+
+<input id="rank" placeholder="Rank">
+
+<br><br>
+
+<button onclick="addMarks()">
+Save Marks
+</button>
+
+<p id="markMessage"></p>
+
+</div>
+  
 <script type="module">
 
 import { initializeApp }
@@ -123,7 +162,47 @@ document.getElementById("message").innerHTML =
 "Student Added Successfully ✅";
 
 }
+window.addMarks = async function(){
 
+try{
+
+const indexNo = document.getElementById("markIndex").value;
+const exam = document.getElementById("exam").value;
+const month = document.getElementById("month").value;
+
+const marks = Number(document.getElementById("marks").value);
+const total = Number(document.getElementById("total").value);
+const percentage = Number(document.getElementById("percentage").value);
+const rank = Number(document.getElementById("rank").value);
+
+
+await setDoc(
+doc(db,"students",indexNo,"monthlyMarks",month),
+{
+
+exam: exam,
+marks: marks,
+total: total,
+percentage: percentage,
+rank: rank
+
+});
+
+
+document.getElementById("markMessage").innerHTML =
+"Marks Added Successfully ✅";
+
+
+}
+
+catch(error){
+
+document.getElementById("markMessage").innerHTML =
+error.message;
+
+}
+
+}
 </script>
 </body>
 
