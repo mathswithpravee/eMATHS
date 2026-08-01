@@ -153,7 +153,7 @@ percentage.toFixed(2);
 </script>
 <br><br>
 
-<input id="rank" placeholder="Rank">
+<input id="rank" placeholder="Rank" readonly>
 
 <br><br>
 
@@ -171,7 +171,8 @@ import { initializeApp }
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 import { getFirestore, doc, setDoc, collection,
-getDocs }
+getDocs, getDoc, query,
+where }
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
@@ -238,7 +239,7 @@ window.addStudent = async function(){
 
 const indexNo = document.getElementById("indexNo").value;
 const name = document.getElementById("name").value;
-const grade = document.getElementById("grade").value;
+const grade = document.getElementById("markGrade").value;
 const email = document.getElementById("email").value;
 console.log(indexNo, name, grade, email);
 
@@ -268,7 +269,44 @@ const total = Number(document.getElementById("total").value);
 const percentage = (marks / total) * 100;
 const rank = Number(document.getElementById("rank").value);
 
+// Calculate Rank
 
+let rank = 1;
+
+const studentsRef = collection(db,"students");
+
+const allStudents = await getDocs(studentsRef);
+
+
+for (const student of allStudents.docs){
+
+const studentData = student.data();
+
+
+if(studentData.grade == grade){
+
+
+const markRef = doc(db,"students",student.id,"monthlyMarks",month);
+
+const markSnap = await getDoc(markRef);
+
+
+if(markSnap.exists()){
+
+const oldMark = markSnap.data();
+
+
+if(oldMark.percentage > percentage){
+
+rank++;
+
+}
+
+}
+
+}
+
+}
 await setDoc(
 doc(db,"students",indexNo,"monthlyMarks",month),
 {
