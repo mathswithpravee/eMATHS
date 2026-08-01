@@ -162,7 +162,77 @@ Delete Student
 
 </div>
 
+<!-- MARKS MANAGEMENT -->
 
+<div class="card">
+
+<h2>📊 Manage Marks</h2>
+
+
+<input id="marksSearchIndex" placeholder="Student Index No">
+
+
+<br><br>
+
+
+<input id="marksID" placeholder="Exam ID (2026-08 / Term-1 / Paper-1)">
+
+
+<br><br>
+
+
+<button onclick="searchMarks()">
+Search Marks
+</button>
+
+
+<br><br>
+
+
+<input id="editExam" placeholder="Exam Name">
+
+
+<br><br>
+
+
+<input id="editMarks" placeholder="Marks">
+
+
+<br><br>
+
+
+<input id="editTotal" placeholder="Total">
+
+
+<br><br>
+
+
+<input id="editPercentage" placeholder="Percentage" readonly>
+
+
+<br><br>
+
+
+<input id="editRank" placeholder="Rank">
+
+
+<br><br>
+
+
+<button onclick="updateMarks()">
+Update Marks
+</button>
+
+
+<button onclick="deleteMarks()">
+Delete Marks
+</button>
+
+
+<p id="marksMessage"></p>
+
+
+</div>
 <!-- ADD MARKS -->
 
 <div class="card">
@@ -710,7 +780,257 @@ selectedStudentID="";
 
 };
 
+let selectedMarksStudent = "";
+let selectedExamID = "";
 
+
+
+// SEARCH MARKS
+
+window.searchMarks = async function(){
+
+
+try{
+
+
+const indexNo =
+document.getElementById("marksSearchIndex").value.trim();
+
+
+
+const examID =
+document.getElementById("marksID").value.trim();
+
+
+
+const markRef =
+doc(
+
+db,
+
+"students",
+
+indexNo,
+
+"monthlyMarks",
+
+examID
+
+);
+
+
+
+const markSnap =
+await getDoc(markRef);
+
+
+
+if(markSnap.exists()){
+
+
+const data =
+markSnap.data();
+
+
+
+selectedMarksStudent = indexNo;
+
+selectedExamID = examID;
+
+
+
+document.getElementById("editExam").value =
+data.exam;
+
+
+document.getElementById("editMarks").value =
+data.marks;
+
+
+document.getElementById("editTotal").value =
+data.total;
+
+
+document.getElementById("editPercentage").value =
+data.percentage;
+
+
+document.getElementById("editRank").value =
+data.rank;
+
+
+
+document.getElementById("marksMessage").innerHTML =
+"Marks Found ✅";
+
+
+}
+
+else{
+
+
+document.getElementById("marksMessage").innerHTML =
+"Marks Not Found ❌";
+
+
+}
+
+
+}
+
+catch(error){
+
+document.getElementById("marksMessage").innerHTML =
+error.message;
+
+}
+
+
+};
+
+
+
+
+
+
+
+// UPDATE MARKS
+
+
+window.updateMarks = async function(){
+
+
+try{
+
+
+const marks =
+Number(document.getElementById("editMarks").value);
+
+
+
+const total =
+Number(document.getElementById("editTotal").value);
+
+
+
+const percentage =
+Number(((marks/total)*100).toFixed(2));
+
+
+
+await setDoc(
+
+doc(
+
+db,
+
+"students",
+
+selectedMarksStudent,
+
+"monthlyMarks",
+
+selectedExamID
+
+),
+
+
+{
+
+
+exam:
+document.getElementById("editExam").value,
+
+
+marks:marks,
+
+
+total:total,
+
+
+percentage:percentage,
+
+
+rank:
+Number(document.getElementById("editRank").value)
+
+
+},
+
+
+{merge:true}
+
+
+);
+
+
+
+document.getElementById("marksMessage").innerHTML =
+"Marks Updated Successfully ✅";
+
+
+}
+
+catch(error){
+
+document.getElementById("marksMessage").innerHTML =
+error.message;
+
+}
+
+
+};
+
+
+
+
+
+
+
+// DELETE MARKS
+
+
+window.deleteMarks = async function(){
+
+
+try{
+
+
+await deleteDoc(
+
+doc(
+
+db,
+
+"students",
+
+selectedMarksStudent,
+
+"monthlyMarks",
+
+selectedExamID
+
+)
+
+);
+
+
+
+document.getElementById("marksMessage").innerHTML =
+"Marks Deleted Successfully ✅";
+
+
+}
+
+catch(error){
+
+document.getElementById("marksMessage").innerHTML =
+error.message;
+
+}
+
+
+};
 
 
 // ==========================
