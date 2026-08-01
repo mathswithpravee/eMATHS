@@ -410,7 +410,55 @@ Number(document.getElementById("total").value);
 const percentage =
 (marks / total) * 100;
 
+let rank = 1;
 
+const selectedGrade = document.getElementById("markGrade").value;
+
+const studentsRef = collection(db,"students");
+
+const studentsSnap = await getDocs(studentsRef);
+
+
+for(const student of studentsSnap.docs){
+
+const data = student.data();
+
+
+if(String(data.grade) === String(selectedGrade)){
+
+
+const markRef = doc(
+db,
+"students",
+student.id,
+"monthlyMarks",
+month
+);
+
+
+const markSnap = await getDoc(markRef);
+
+
+if(markSnap.exists()){
+
+
+const oldData = markSnap.data();
+
+
+if(oldData.percentage > percentage){
+
+rank++;
+
+}
+
+
+}
+
+
+}
+
+
+}
 
 await setDoc(
 
@@ -426,7 +474,7 @@ total:total,
 
 percentage:Number(percentage.toFixed(2)),
 
-rank:0
+rank:rank
 
 }
 
