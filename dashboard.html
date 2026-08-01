@@ -110,6 +110,7 @@ button{
 <table style="width:100%; border-collapse:collapse;">
 
 <tr style="background:#1e88e5; color:white;">
+<th>Month</th>
 <th>Exam</th>
 <th>Marks</th>
 <th>Total</th>
@@ -227,6 +228,17 @@ marksSnap.forEach((doc)=>{
 
 const mark = doc.data();
 
+const examMonth = doc.id;
+
+const parts = examMonth.split("-");
+
+const displayMonth = 
+new Date(parts[0], parts[1]-1)
+.toLocaleString("default",{
+month:"long",
+year:"numeric"
+});
+
 examLabels.push(mark.exam);
 
 percentageData.push(mark.percentage);
@@ -279,6 +291,7 @@ const mark = doc.data();
 
 table += `
 <tr>
+<td>${displayMonth}</td>
 <td>${mark.exam}</td>
 <td>${mark.marks}</td>
 <td>${mark.total}</td>
