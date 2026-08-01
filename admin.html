@@ -334,7 +334,13 @@ Delete Marks
 <button onclick="addVideo()">
 Add Video
 </button>
+<br><br>
 
+<h3>Added Videos</h3>
+
+<div id="videoListAdmin">
+
+</div>
 
 <p id="videoMessage"></p>
 
@@ -1689,6 +1695,115 @@ error.message;
 
 
 };
+// ========================
+// LOAD VIDEOS ADMIN
+// ========================
+
+
+async function loadAdminVideos(){
+
+
+const box =
+document.getElementById("videoListAdmin");
+
+
+box.innerHTML="";
+
+
+const snapshot =
+await getDocs(collection(db,"videos"));
+
+
+
+snapshot.forEach((video)=>{
+
+
+const data =
+video.data();
+
+
+
+box.innerHTML += `
+
+
+<div style="background:#eee;padding:10px;margin:10px;border-radius:10px;">
+
+
+<h4>${data.name}</h4>
+
+
+<p>Grade: ${data.grade}</p>
+
+
+<img src="${data.thumbnail}" width="200">
+
+
+<br><br>
+
+
+<button onclick="deleteVideo('${video.id}')">
+
+Delete
+
+</button>
+
+
+</div>
+
+
+`;
+
+
+
+});
+
+
+}
+
+
+
+
+
+// DELETE VIDEO
+
+
+window.deleteVideo = async function(id){
+
+
+try{
+
+
+await deleteDoc(
+
+doc(db,"videos",id)
+
+);
+
+
+
+alert("Video Deleted Successfully ✅");
+
+
+loadAdminVideos();
+
+
+}
+
+
+catch(error){
+
+alert(error.message);
+
+}
+
+
+};
+
+
+
+
+
+loadAdminVideos();
 </script>
 
 
