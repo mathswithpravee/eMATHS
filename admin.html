@@ -27,12 +27,22 @@ padding:20px;
 border-radius:10px;
 }
 
+input, select{
+padding:10px;
+width:70%;
+}
+
 button{
 padding:12px 20px;
 background:#1e88e5;
 color:white;
 border:none;
 border-radius:5px;
+cursor:pointer;
+}
+
+table{
+width:100%;
 }
 
 </style>
@@ -42,17 +52,21 @@ border-radius:5px;
 
 <body>
 
+
 <div class="header">
 
 <h1>Maths with Pravee</h1>
+
 <h3>Admin Dashboard</h3>
 
 </div>
 
 
+
 <div class="card">
 
 <h2>➕ Add Student</h2>
+
 
 <input id="indexNo" placeholder="Index No">
 
@@ -70,16 +84,25 @@ border-radius:5px;
 
 <br><br>
 
+
 <button onclick="addStudent()">
 Save Student
 </button>
 
+
 <p id="message"></p>
 
+
 </div>
+
+
+
+
 <div class="card">
 
 <h2>📊 Add Monthly Marks</h2>
+
+
 <select id="markGrade">
 
 <option value="">Select Grade</option>
@@ -98,131 +121,172 @@ Save Student
 
 </select>
 
+
 <br><br>
-  
+
+
 <select id="markIndex">
 
-<option value="">Select Student</option>
+<option value="">
+Select Student
+</option>
+
 
 </select>
 
+
 <br><br>
+
 
 <input id="exam" placeholder="Exam Name">
 
 <br><br>
 
+
 <input id="month" placeholder="Month (2026-08)">
 
 <br><br>
+
 
 <input id="marks" placeholder="Marks">
 
 <br><br>
 
+
 <input id="total" placeholder="Total Marks">
 
 <br><br>
 
+
 <input id="percentage" placeholder="Percentage" readonly>
-<script>
-
-document.getElementById("marks").addEventListener("input", calculatePercentage);
-
-document.getElementById("total").addEventListener("input", calculatePercentage);
 
 
-function calculatePercentage(){
-
-let marks = document.getElementById("marks").value;
-
-let total = document.getElementById("total").value;
-
-
-if(marks && total){
-
-let percentage = (marks / total) * 100;
-
-document.getElementById("percentage").value =
-percentage.toFixed(2);
-
-}
-
-}
-
-</script>
 <br><br>
+
 
 <input id="rank" placeholder="Rank" readonly>
 
+
 <br><br>
 
+
 <button onclick="addMarks()">
+
 Save Marks
+
 </button>
+
 
 <p id="markMessage"></p>
 
+
 </div>
-  
 <script type="module">
 
-import { initializeApp }
+import { initializeApp } 
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
-import { getFirestore, doc, setDoc, collection,
-getDocs, getDoc, query,
-where }
+
+import { 
+getFirestore,
+doc,
+setDoc,
+collection,
+getDocs,
+getDoc
+}
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
+
 const firebaseConfig = {
-  apiKey: "AIzaSyAI-rbO_z9fzIZicTW2SlI0cj__R1Ji6GM",
-  authDomain: "emaths-db8a2.firebaseapp.com",
-  projectId: "emaths-db8a2",
-  storageBucket: "emaths-db8a2.firebasestorage.app",
-  messagingSenderId: "790474740591",
-  appId: "1:790474740591:web:a54ea2419f29c0178a8e9a"
+
+apiKey: "AIzaSyAI-rbO_z9fzIZicTW2SlI0cj__R1Ji6GM",
+
+authDomain: "emaths-db8a2.firebaseapp.com",
+
+projectId: "emaths-db8a2",
+
+storageBucket: "emaths-db8a2.firebasestorage.app",
+
+messagingSenderId: "790474740591",
+
+appId: "1:790474740591:web:a54ea2419f29c0178a8e9a"
+
 };
+
 
 
 const app = initializeApp(firebaseConfig);
 
 const db = getFirestore(app);
-const gradeSelect = document.getElementById("grade");
-const studentSelect = document.getElementById("markIndex");
 
 
-gradeSelect.addEventListener("change", async function(){
+
+// =====================
+// LOAD STUDENTS BY GRADE
+// =====================
+
+
+const gradeSelect =
+document.getElementById("markGrade");
+
+
+const studentSelect =
+document.getElementById("markIndex");
+
+
+
+gradeSelect.addEventListener("change", async ()=>{
+
 
 studentSelect.innerHTML =
-'<option value="">Select Student</option>';
+`
+<option value="">
+Select Student
+</option>
+`;
 
 
-const selectedGrade = gradeSelect.value;
-console.log("Selected Grade:", selectedGrade);
 
-const studentsRef = collection(db,"students");
+const selectedGrade =
+gradeSelect.value;
 
-const snapshot = await getDocs(studentsRef);
+
+
+const studentsRef =
+collection(db,"students");
+
+
+
+const snapshot =
+await getDocs(studentsRef);
+
 
 
 snapshot.forEach((student)=>{
 
+
 const data = student.data();
-console.log("Student:", data.name, data.grade);
+
+
 
 if(String(data.grade) === String(selectedGrade)){
 
 
-let option = document.createElement("option");
+let option =
+document.createElement("option");
 
 
-option.value = student.id;
+
+option.value =
+student.id;
+
 
 
 option.textContent =
 student.id + " - " + data.name;
+
 
 
 studentSelect.appendChild(option);
@@ -230,100 +294,144 @@ studentSelect.appendChild(option);
 
 }
 
+
+
 });
 
 
 });
+
+
+
+
+// =====================
+// ADD STUDENT
+// =====================
+
 
 window.addStudent = async function(){
 
-const indexNo = document.getElementById("indexNo").value;
-const name = document.getElementById("name").value;
-const grade = document.getElementById("markGrade").value;
-const email = document.getElementById("email").value;
-console.log(indexNo, name, grade, email);
 
-await setDoc(doc(db,"students",indexNo),{
+try{
 
-name: name,
-grade: grade,
-email: email
 
-});
+const indexNo =
+document.getElementById("indexNo").value;
+
+
+const name =
+document.getElementById("name").value;
+
+
+const grade =
+document.getElementById("grade").value;
+
+
+const email =
+document.getElementById("email").value;
+
+
+
+await setDoc(
+
+doc(db,"students",indexNo),
+
+{
+
+name:name,
+
+grade:grade,
+
+email:email
+
+}
+
+);
+
 
 
 document.getElementById("message").innerHTML =
 "Student Added Successfully ✅";
 
+
+
+}
+
 catch(error){
+
 
 document.getElementById("message").innerHTML =
 error.message;
 
+
 }
-}
+
+
+};
+
+
+
+
+
+// =====================
+// ADD MONTHLY MARKS
+// =====================
+
+
 window.addMarks = async function(){
+
 
 try{
 
-const indexNo = document.getElementById("markIndex").value;
-const exam = document.getElementById("exam").value;
-const month = document.getElementById("month").value;
 
-const marks = Number(document.getElementById("marks").value);
-const total = Number(document.getElementById("total").value);
-const percentage = (marks / total) * 100;
-const rank = Number(document.getElementById("rank").value);
-
-// Calculate Rank
-
-let rank = 1;
-
-const studentsRef = collection(db,"students");
-
-const allStudents = await getDocs(studentsRef);
+const indexNo =
+document.getElementById("markIndex").value;
 
 
-for (const student of allStudents.docs){
-
-const studentData = student.data();
-
-
-if(studentData.grade == grade){
+const exam =
+document.getElementById("exam").value;
 
 
-const markRef = doc(db,"students",student.id,"monthlyMarks",month);
-
-const markSnap = await getDoc(markRef);
-
-
-if(markSnap.exists()){
-
-const oldMark = markSnap.data();
+const month =
+document.getElementById("month").value;
 
 
-if(oldMark.percentage > percentage){
 
-rank++;
+const marks =
+Number(document.getElementById("marks").value);
 
-}
 
-}
 
-}
+const total =
+Number(document.getElementById("total").value);
 
-}
+
+
+const percentage =
+(marks / total) * 100;
+
+
+
 await setDoc(
+
 doc(db,"students",indexNo,"monthlyMarks",month),
+
 {
 
-exam: exam,
-marks: marks,
-total: total,
-percentage: percentage,
-rank: rank
+exam:exam,
 
-});
+marks:marks,
+
+total:total,
+
+percentage:Number(percentage.toFixed(2)),
+
+rank:0
+
+}
+
+);
+
 
 
 document.getElementById("markMessage").innerHTML =
@@ -332,15 +440,19 @@ document.getElementById("markMessage").innerHTML =
 
 }
 
+
 catch(error){
+
 
 document.getElementById("markMessage").innerHTML =
 error.message;
 
-}
 
 }
+
+
+};
+
+
+
 </script>
-</body>
-
-</html>
