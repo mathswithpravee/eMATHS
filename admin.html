@@ -200,7 +200,7 @@ studentSelect.innerHTML =
 
 
 const selectedGrade = gradeSelect.value;
-
+console.log("Selected Grade:", selectedGrade);
 
 const studentsRef = collection(db,"students");
 
@@ -210,9 +210,9 @@ const snapshot = await getDocs(studentsRef);
 snapshot.forEach((student)=>{
 
 const data = student.data();
+console.log("Student:", data.name, data.grade);
 
-
-if(String(data.grade) == String(selectedGrade)){
+if(String(data.grade) === String(selectedGrade)){
 
 
 let option = document.createElement("option");
