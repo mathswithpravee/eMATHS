@@ -443,22 +443,31 @@ const percentage =
 
 let rank = 1;
 
-const selectedGrade = document.getElementById("markGrade").value;
+const selectedGrade =
+document.getElementById("markGrade").value;
 
-const studentsRef = collection(db,"students");
 
-const studentsSnap = await getDocs(studentsRef);
+const studentsRef =
+collection(db,"students");
+
+
+const studentsSnap =
+await getDocs(studentsRef);
+
 
 
 for(const student of studentsSnap.docs){
 
+
 const data = student.data();
+
 
 
 if(String(data.grade) === String(selectedGrade)){
 
 
-const markRef = doc(
+const oldMarkRef =
+doc(
 db,
 "students",
 student.id,
@@ -467,13 +476,18 @@ month
 );
 
 
-const markSnap = await getDoc(markRef);
+
+const oldMarkSnap =
+await getDoc(oldMarkRef);
 
 
-if(markSnap.exists()){
+
+if(oldMarkSnap.exists()){
 
 
-const oldData = markSnap.data();
+const oldData =
+oldMarkSnap.data();
+
 
 
 if(oldData.percentage > percentage){
