@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Student Dashboard - Maths with Pravee</title>
+
+<style>
+
+body{
+    font-family: Arial, sans-serif;
+    background:#f4f7fb;
+    text-align:center;
+}
+
+.header{
+    background:#1e88e5;
+    color:white;
+    padding:25px;
+}
+
+.card{
+    background:white;
+    width:80%;
+    margin:20px auto;
+    padding:20px;
+    border-radius:10px;
+}
+
+button{
+    padding:12px 20px;
+    margin:10px;
+    border:none;
+    border-radius:5px;
+    background:#1e88e5;
+    color:white;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="header">
+
+<h1>Maths with Pravee</h1>
+<h3>Student Dashboard</h3>
+
+</div>
+
+
+
+<div class="card">
+
+<h2>Welcome 👋</h2>
+
+<p id="studentName">Loading...</p>
+
+<p id="studentGrade"></p>
+
+<p id="studentIndex"></p>
+
+</div>
+
+
+
+<div class="card">
+
+<h2>Learning</h2>
+
+<button>📚 Lessons</button>
+
+<button>🎥 Videos</button>
+
+<button>📄 Notes</button>
+
+</div>
+
+
+
+<div class="card">
+
+<h2>Academic</h2>
+
+<button>📝 Exams</button>
+
+<button>📊 Monthly Results</button>
+
+</div>
+
+
+
+<script type="module">
+
+
+import { initializeApp } 
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+
+import { getFirestore, doc, getDoc } 
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+
+
+// Firebase Config
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAI-rbO_z9fzIZicTW2SlI0cj__R1Ji6GM",
+  authDomain: "emaths-db8a2.firebaseapp.com",
+  projectId: "emaths-db8a2",
+  storageBucket: "emaths-db8a2.firebasestorage.app",
+  messagingSenderId: "790474740591",
+  appId: "1:790474740591:web:a54ea2419f29c0178a8e9a"
+};
+
+
+
+const app = initializeApp(firebaseConfig);
+
+const db = getFirestore(app);
+
+
+
+// Get student index from login
+
+const indexNo = localStorage.getItem("studentIndex");
+
+
+
+async function loadStudent(){
+
+
+if(!indexNo){
+
+document.getElementById("studentName").innerHTML =
+"Please Login First";
+
+return;
+
+}
+
+
+
+const studentRef = doc(db,"students",indexNo);
+
+const studentSnap = await getDoc(studentRef);
+
+
+
+if(studentSnap.exists()){
+
+
+const data = studentSnap.data();
+
+
+
+document.getElementById("studentName").innerHTML =
+"Name: " + data.name;
+
+
+
+document.getElementById("studentGrade").innerHTML =
+"Grade: " + data.grade;
+
+
+
+document.getElementById("studentIndex").innerHTML =
+"Index No: " + indexNo;
+
+
+
+}
+
+else{
+
+document.getElementById("studentName").innerHTML =
+"Student not found";
+
+}
+
+
+}
+
+
+
+loadStudent();
+
+
+</script>
+
+
+</body>
+
+</html>
