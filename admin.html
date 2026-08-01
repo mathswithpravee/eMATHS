@@ -159,7 +159,38 @@ Select Student
 
 
 <input id="percentage" placeholder="Percentage" readonly>
+<script>
 
+document.getElementById("marks")
+.addEventListener("input", calculatePercentage);
+
+document.getElementById("total")
+.addEventListener("input", calculatePercentage);
+
+
+function calculatePercentage(){
+
+const marks =
+Number(document.getElementById("marks").value);
+
+
+const total =
+Number(document.getElementById("total").value);
+
+
+if(total > 0){
+
+const percentage = (marks / total) * 100;
+
+
+document.getElementById("percentage").value =
+percentage.toFixed(2);
+
+}
+
+}
+
+</script>
 
 <br><br>
 
