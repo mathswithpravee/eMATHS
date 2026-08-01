@@ -112,7 +112,55 @@ Save Student
 
 </div>
 
+<!-- STUDENT MANAGEMENT -->
 
+<div class="card">
+
+<h2>👨‍🎓 Manage Students</h2>
+
+
+<input id="searchStudent" placeholder="Search Index No">
+
+
+<br><br>
+
+
+<button onclick="searchStudent()">
+Search
+</button>
+
+
+<p id="studentDetails"></p>
+
+
+<input id="editName" placeholder="Student Name">
+
+<br><br>
+
+<input id="editGrade" placeholder="Grade">
+
+<br><br>
+
+<input id="editEmail" placeholder="Email">
+
+
+<br><br>
+
+
+<button onclick="updateStudent()">
+Update Student
+</button>
+
+
+<button onclick="deleteStudent()">
+Delete Student
+</button>
+
+
+<p id="studentMessage"></p>
+
+
+</div>
 
 
 
@@ -360,7 +408,8 @@ doc,
 setDoc,
 collection,
 getDocs,
-getDoc
+getDoc,
+deleteDoc
 }
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
@@ -489,7 +538,178 @@ error.message;
 };
 
 
+let selectedStudentID = "";
 
+
+// SEARCH STUDENT
+
+window.searchStudent = async function(){
+
+
+const indexNo =
+document.getElementById("searchIndex").value.trim();
+
+
+
+if(indexNo==""){
+
+document.getElementById("studentMessage").innerHTML =
+"Enter Index No ❌";
+
+return;
+
+}
+
+
+
+const studentRef =
+doc(db,"students",indexNo);
+
+
+
+const studentSnap =
+await getDoc(studentRef);
+
+
+
+if(studentSnap.exists()){
+
+
+const data =
+studentSnap.data();
+
+
+
+selectedStudentID = indexNo;
+
+
+
+document.getElementById("editName").value =
+data.name;
+
+
+document.getElementById("editGrade").value =
+data.grade;
+
+
+document.getElementById("editEmail").value =
+data.email;
+
+
+
+document.getElementById("studentMessage").innerHTML =
+"Student Found ✅";
+
+
+}
+
+else{
+
+
+document.getElementById("studentMessage").innerHTML =
+"Student Not Found ❌";
+
+
+}
+
+
+};
+
+
+
+
+
+// UPDATE STUDENT
+
+window.updateStudent = async function(){
+
+
+if(selectedStudentID==""){
+
+
+document.getElementById("studentMessage").innerHTML =
+"Search Student First ❌";
+
+
+return;
+
+}
+
+
+
+await setDoc(
+
+doc(db,"students",selectedStudentID),
+
+{
+
+
+name:
+document.getElementById("editName").value,
+
+
+grade:
+document.getElementById("editGrade").value,
+
+
+email:
+document.getElementById("editEmail").value
+
+
+},
+
+{merge:true}
+
+
+);
+
+
+
+document.getElementById("studentMessage").innerHTML =
+"Student Updated Successfully ✅";
+
+
+};
+
+
+
+
+
+
+// DELETE STUDENT
+
+window.deleteStudent = async function(){
+
+
+if(selectedStudentID==""){
+
+
+document.getElementById("studentMessage").innerHTML =
+"Search Student First ❌";
+
+
+return;
+
+}
+
+
+
+await deleteDoc(
+
+doc(db,"students",selectedStudentID)
+
+);
+
+
+
+document.getElementById("studentMessage").innerHTML =
+"Student Deleted Successfully ✅";
+
+
+selectedStudentID="";
+
+
+};
 
 
 
