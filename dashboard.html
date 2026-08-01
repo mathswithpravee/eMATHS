@@ -220,6 +220,38 @@ document.getElementById("studentIndex").innerHTML =
 const marksRef = collection(db, "students", indexNo, "monthlyMarks");
 
 const marksSnap = await getDocs(marksRef);
+let totalPercentage = 0;
+let count = 0;
+
+
+marksSnap.forEach((doc)=>{
+
+const mark = doc.data();
+
+totalPercentage += Number(mark.percentage);
+
+count++;
+
+});
+
+
+if(count > 0){
+
+const average =
+(totalPercentage / count).toFixed(2);
+
+
+document.getElementById("performanceSummary").innerHTML =
+"Average Performance: " + average + "%";
+
+
+}
+else{
+
+document.getElementById("performanceSummary").innerHTML =
+"No Results Available";
+
+}
 let examLabels = [];
 let percentageData = [];
 
