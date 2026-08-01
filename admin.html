@@ -255,6 +255,12 @@ email: email
 document.getElementById("message").innerHTML =
 "Student Added Successfully ✅";
 
+catch(error){
+
+document.getElementById("message").innerHTML =
+error.message;
+
+}
 }
 window.addMarks = async function(){
 
