@@ -83,7 +83,9 @@ width:100%;
 <input id="email" placeholder="Email">
 
 <br><br>
+<input id="password" placeholder="Password">
 
+<br><br>
 
 <button onclick="addStudent()">
 Save Student
@@ -361,7 +363,8 @@ document.getElementById("grade").value;
 const email =
 document.getElementById("email").value;
 
-
+const password =
+document.getElementById("password").value;
 
 await setDoc(
 
@@ -373,8 +376,9 @@ name:name,
 
 grade:grade,
 
-email:email
-
+email:email,
+  
+password:password,
 }
 
 );
