@@ -37,7 +37,7 @@ button{
 }
 
 </style>
-
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 
@@ -125,7 +125,13 @@ button{
 
 </div>
 
+<div class="card">
 
+<h2>📈 My Progress</h2>
+
+<canvas id="progressChart"></canvas>
+
+</div>
 
 <script type="module">
 
@@ -213,7 +219,48 @@ document.getElementById("studentIndex").innerHTML =
 const marksRef = collection(db, "students", indexNo, "monthlyMarks");
 
 const marksSnap = await getDocs(marksRef);
-    
+let examLabels = [];
+let percentageData = [];
+
+
+marksSnap.forEach((doc)=>{
+
+const mark = doc.data();
+
+examLabels.push(mark.exam);
+
+percentageData.push(mark.percentage);
+
+});
+new Chart(
+document.getElementById("progressChart"),
+{
+
+type:"line",
+
+data:{
+
+labels: examLabels,
+
+datasets:[{
+
+label:"Percentage %",
+
+data: percentageData,
+
+borderWidth:3
+
+}]
+
+},
+
+options:{
+
+responsive:true
+
+}
+
+});
 console.log("Marks count:", marksSnap.size);
 
 marksSnap.forEach((doc)=>{
