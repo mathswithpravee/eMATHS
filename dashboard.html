@@ -91,7 +91,17 @@ button{
 
 </div>
 
+<div class="card">
 
+<h2>📈 Performance Summary</h2>
+
+<p id="average">Average: Loading...</p>
+
+<p id="bestResult">Best Result: Loading...</p>
+
+<p id="testCount">Tests Completed: Loading...</p>
+
+</div>
 
 <div class="card">
 
@@ -212,6 +222,10 @@ marksSnap.forEach((doc)=>{
 
 let table = "";
 
+let totalPercentage = 0;
+let bestPercentage = 0;
+let count = 0;
+
 marksSnap.forEach((doc)=>{
 
 const mark = doc.data();
@@ -225,11 +239,27 @@ table += `
 <td>${mark.rank}</td>
 </tr>
 `;
+totalPercentage += mark.percentage;
 
+if(mark.percentage > bestPercentage){
+    bestPercentage = mark.percentage;
+}
+
+count++;
+    
 });
 
 document.getElementById("marksTable").innerHTML = table;
+let average = totalPercentage / count;
 
+document.getElementById("average").innerHTML =
+"Average: " + average.toFixed(2) + "%";
+
+document.getElementById("bestResult").innerHTML =
+"Best Result: " + bestPercentage + "%";
+
+document.getElementById("testCount").innerHTML =
+"Tests Completed: " + count;
 }
 
 else{
