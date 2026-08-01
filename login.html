@@ -72,7 +72,110 @@ Login
 
 <script type="module">
 
-// Firebase code next step
+import { initializeApp } 
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import { 
+getFirestore,
+doc,
+getDoc
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+
+const firebaseConfig = {
+
+apiKey: "AIzaSyAI-rbO_z9fzIZicTW2SlI0cj__R1Ji6GM",
+
+authDomain: "emaths-db8a2.firebaseapp.com",
+
+projectId: "emaths-db8a2",
+
+storageBucket: "emaths-db8a2.firebasestorage.app",
+
+messagingSenderId: "790474740591",
+
+appId: "1:790474740591:web:a54ea2419f29c0178a8e9a"
+
+};
+
+
+const app = initializeApp(firebaseConfig);
+
+const db = getFirestore(app);
+
+
+
+window.login = async function(){
+
+
+const indexNo =
+document.getElementById("indexNo").value;
+
+
+const password =
+document.getElementById("password").value;
+
+
+
+const studentRef =
+doc(db,"students",indexNo);
+
+
+
+const studentSnap =
+await getDoc(studentRef);
+
+
+
+if(studentSnap.exists()){
+
+
+const data =
+studentSnap.data();
+
+
+
+if(data.password === password){
+
+
+localStorage.setItem(
+"studentIndex",
+indexNo
+);
+
+
+
+window.location.href =
+"student-dashboard.html";
+
+
+}
+
+else{
+
+
+document.getElementById("message").innerHTML =
+"Wrong Password ❌";
+
+
+}
+
+
+}
+
+else{
+
+
+document.getElementById("message").innerHTML =
+"Student Not Found ❌";
+
+
+}
+
+
+};
+
 
 </script>
 
