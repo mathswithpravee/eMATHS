@@ -36,20 +36,44 @@ button{
     color:white;
 }
 
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+
+th,td{
+
+padding:10px;
+
+border:1px solid #ddd;
+
+}
+
+
 </style>
+
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
 </head>
+
 
 
 <body>
 
 
+
 <div class="header">
 
 <h1>Maths with Pravee</h1>
+
 <h3>Student Dashboard</h3>
 
 </div>
+
 
 
 
@@ -57,85 +81,146 @@ button{
 
 <h2>Welcome 👋</h2>
 
-<p id="studentName">Loading...</p>
+
+<p id="studentName">
+Loading...
+</p>
+
 
 <p id="studentGrade"></p>
 
+
 <p id="studentIndex"></p>
+
 
 </div>
 
 
 
+
 <div class="card">
+
 
 <h2>Learning</h2>
 
+
 <button>📚 Lessons</button>
+
 
 <button>🎥 Videos</button>
 
+
 <button>📄 Notes</button>
+
 
 </div>
 
 
 
+
+
 <div class="card">
+
 
 <h2>Academic</h2>
 
+
 <button>📝 Exams</button>
+
 
 <button>📊 Monthly Results</button>
 
+
 </div>
 
+
+
+
+
 <div class="card">
+
 
 <h2>📈 Performance Summary</h2>
 
-<p id="average">Average: Loading...</p>
 
-<p id="bestResult">Best Result: Loading...</p>
+<p id="average">
+Average: Loading...
+</p>
 
-<p id="testCount">Tests Completed: Loading...</p>
+
+<p id="bestResult">
+Best Result: Loading...
+</p>
+
+
+<p id="testCount">
+Tests Completed: Loading...
+</p>
+
+
 
 </div>
 
+
+
+
+
 <div class="card">
+
 
 <h2>📊 Monthly Results</h2>
 
-<table style="width:100%; border-collapse:collapse;">
 
-<tr style="background:#1e88e5; color:white;">
+<table>
+
+
+<tr style="background:#1e88e5;color:white;">
+
+
 <th>Month</th>
+
 <th>Exam</th>
+
 <th>Marks</th>
+
 <th>Total</th>
+
 <th>%</th>
+
 <th>Rank</th>
+
+
 </tr>
+
+
 
 <tbody id="marksTable">
 
+
 </tbody>
+
+
 
 </table>
 
+
 </div>
+
+
+
+
 
 <div class="card">
 
+
 <h2>📈 My Progress</h2>
+
 
 <canvas id="progressChart"></canvas>
 
+
 </div>
-
 <script type="module">
-
 
 import { initializeApp } 
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -152,15 +237,20 @@ from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
 
-// Firebase Config
-
 const firebaseConfig = {
-  apiKey: "AIzaSyAI-rbO_z9fzIZicTW2SlI0cj__R1Ji6GM",
-  authDomain: "emaths-db8a2.firebaseapp.com",
-  projectId: "emaths-db8a2",
-  storageBucket: "emaths-db8a2.firebasestorage.app",
-  messagingSenderId: "790474740591",
-  appId: "1:790474740591:web:a54ea2419f29c0178a8e9a"
+
+apiKey: "AIzaSyAI-rbO_z9fzIZicTW2SlI0cj__R1Ji6GM",
+
+authDomain: "emaths-db8a2.firebaseapp.com",
+
+projectId: "emaths-db8a2",
+
+storageBucket: "emaths-db8a2.firebasestorage.app",
+
+messagingSenderId: "790474740591",
+
+appId: "1:790474740591:web:a54ea2419f29c0178a8e9a"
+
 };
 
 
@@ -170,8 +260,6 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 
-
-// Get student index from login
 
 const indexNo = localStorage.getItem("studentIndex");
 
@@ -191,16 +279,21 @@ return;
 
 
 
-const studentRef = doc(db,"students",indexNo);
+const studentRef =
+doc(db,"students",indexNo);
 
-const studentSnap = await getDoc(studentRef);
+
+
+const studentSnap =
+await getDoc(studentRef);
 
 
 
 if(studentSnap.exists()){
 
 
-const data = studentSnap.data();
+const data =
+studentSnap.data();
 
 
 
@@ -217,149 +310,220 @@ document.getElementById("studentGrade").innerHTML =
 document.getElementById("studentIndex").innerHTML =
 "Index No: " + indexNo;
 
-const marksRef = collection(db, "students", indexNo, "monthlyMarks");
 
-const marksSnap = await getDocs(marksRef);
+
+
+const marksRef =
+collection(db,"students",indexNo,"monthlyMarks");
+
+
+
+const marksSnap =
+await getDocs(marksRef);
+
+
+
+
+let table = "";
+
 let totalPercentage = 0;
+
+let bestPercentage = 0;
+
 let count = 0;
+
+
+let chartLabels = [];
+
+let chartData = [];
+
+
 
 
 marksSnap.forEach((doc)=>{
 
+
 const mark = doc.data();
+
+
+const examMonth = doc.id;
+
+
+const parts = examMonth.split("-");
+
+
+const displayMonth =
+new Date(parts[0],parts[1]-1)
+.toLocaleString("default",{
+
+month:"long",
+
+year:"numeric"
+
+});
+
+
+
+table += `
+
+<tr>
+
+<td>${displayMonth}</td>
+
+<td>${mark.exam}</td>
+
+<td>${mark.marks}</td>
+
+<td>${mark.total}</td>
+
+<td>${mark.percentage}%</td>
+
+<td>${mark.rank}</td>
+
+</tr>
+
+`;
+
+
 
 totalPercentage += Number(mark.percentage);
 
+
+
+if(Number(mark.percentage) > bestPercentage){
+
+bestPercentage = Number(mark.percentage);
+
+}
+
+
+
 count++;
 
+
+
+chartLabels.push(displayMonth);
+
+
+chartData.push(mark.percentage);
+
+
+
 });
+
+
+
+
+
+document.getElementById("marksTable").innerHTML =
+table;
+
+
 
 
 if(count > 0){
 
-const average =
+
+let average =
 (totalPercentage / count).toFixed(2);
 
 
-document.getElementById("performanceSummary").innerHTML =
-"Average Performance: " + average + "%";
+
+document.getElementById("average").innerHTML =
+"Average: " + average + "%";
+
+
+
+document.getElementById("bestResult").innerHTML =
+"Best Result: " + bestPercentage + "%";
+
+
+
+document.getElementById("testCount").innerHTML =
+"Tests Completed: " + count;
+
 
 
 }
+
 else{
 
-document.getElementById("performanceSummary").innerHTML =
-"No Results Available";
+
+document.getElementById("average").innerHTML =
+"Average: No Results";
+
+
+document.getElementById("bestResult").innerHTML =
+"Best Result: No Results";
+
+
+document.getElementById("testCount").innerHTML =
+"Tests Completed: 0";
+
 
 }
-let examLabels = [];
-let percentageData = [];
 
 
-marksSnap.forEach((doc)=>{
 
-const mark = doc.data();
 
-const examMonth = doc.id;
-
-const parts = examMonth.split("-");
-
-const displayMonth = 
-new Date(parts[0], parts[1]-1)
-.toLocaleString("default",{
-month:"long",
-year:"numeric"
-});
-
-examLabels.push(mark.exam);
-
-percentageData.push(mark.percentage);
-
-});
 new Chart(
+
 document.getElementById("progressChart"),
+
 {
+
 
 type:"line",
 
+
 data:{
 
-labels: examLabels,
+
+labels:chartLabels,
+
 
 datasets:[{
 
 label:"Percentage %",
 
-data: percentageData,
+data:chartData,
 
 borderWidth:3
 
 }]
 
+
 },
+
 
 options:{
 
+
 responsive:true
 
+
 }
 
-});
-console.log("Marks count:", marksSnap.size);
 
-marksSnap.forEach((doc)=>{
-    console.log(doc.data());
-});
-
-let table = "";
-
-let totalPercentage = 0;
-let bestPercentage = 0;
-let count = 0;
-
-marksSnap.forEach((doc)=>{
-
-const mark = doc.data();
-
-table += `
-<tr>
-<td>${displayMonth}</td>
-<td>${mark.exam}</td>
-<td>${mark.marks}</td>
-<td>${mark.total}</td>
-<td>${mark.percentage}%</td>
-<td>${mark.rank}</td>
-</tr>
-`;
-totalPercentage += mark.percentage;
-
-if(mark.percentage > bestPercentage){
-    bestPercentage = mark.percentage;
 }
 
-count++;
-    
-});
 
-document.getElementById("marksTable").innerHTML = table;
-let average = totalPercentage / count;
+);
 
-document.getElementById("average").innerHTML =
-"Average: " + average.toFixed(2) + "%";
 
-document.getElementById("bestResult").innerHTML =
-"Best Result: " + bestPercentage + "%";
 
-document.getElementById("testCount").innerHTML =
-"Tests Completed: " + count;
 }
+
 
 else{
+
 
 document.getElementById("studentName").innerHTML =
 "Student not found";
 
+
 }
+
 
 
 }
@@ -370,8 +534,3 @@ loadStudent();
 
 
 </script>
-
-
-</body>
-
-</html>
