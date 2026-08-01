@@ -108,7 +108,7 @@ const indexNo = document.getElementById("indexNo").value;
 const name = document.getElementById("name").value;
 const grade = document.getElementById("grade").value;
 const email = document.getElementById("email").value;
-
+console.log(indexNo, name, grade, email);
 
 await setDoc(doc(db,"students",indexNo),{
 
