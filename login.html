@@ -110,8 +110,9 @@ try {
         );
 
 
-        document.getElementById("message").innerHTML =
-        "Login Successful!";
+        localStorage.setItem("studentIndex", indexNo);
+
+window.location.href = "dashboard.html";
 
 
     }else{
