@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Admin Dashboard - Maths with Pravee</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#f4f7fb;
+text-align:center;
+}
+
+.header{
+background:#1e88e5;
+color:white;
+padding:25px;
+}
+
+.card{
+background:white;
+width:80%;
+margin:20px auto;
+padding:20px;
+border-radius:10px;
+}
+
+button{
+padding:12px 20px;
+background:#1e88e5;
+color:white;
+border:none;
+border-radius:5px;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+<div class="header">
+
+<h1>Maths with Pravee</h1>
+<h3>Admin Dashboard</h3>
+
+</div>
+
+
+<div class="card">
+
+<h2>➕ Add Student</h2>
+
+<input id="indexNo" placeholder="Index No">
+
+<br><br>
+
+<input id="name" placeholder="Student Name">
+
+<br><br>
+
+<input id="grade" placeholder="Grade">
+
+<br><br>
+
+<input id="email" placeholder="Email">
+
+<br><br>
+
+<button onclick="addStudent()">
+Save Student
+</button>
+
+<p id="message"></p>
+
+</div>
+
+
+</body>
+
+</html>
