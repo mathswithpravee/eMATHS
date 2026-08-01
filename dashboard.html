@@ -93,6 +93,30 @@ button{
 
 
 
+<div class="card">
+
+<h2>📊 Monthly Results</h2>
+
+<table style="width:100%; border-collapse:collapse;">
+
+<tr style="background:#1e88e5; color:white;">
+<th>Exam</th>
+<th>Marks</th>
+<th>Total</th>
+<th>%</th>
+<th>Rank</th>
+</tr>
+
+<tbody id="marksTable">
+
+</tbody>
+
+</table>
+
+</div>
+
+
+
 <script type="module">
 
 
@@ -100,7 +124,13 @@ import { initializeApp }
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 
-import { getFirestore, doc, getDoc } 
+import {
+getFirestore,
+doc,
+getDoc,
+collection,
+getDocs
+}
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
@@ -170,7 +200,29 @@ document.getElementById("studentGrade").innerHTML =
 document.getElementById("studentIndex").innerHTML =
 "Index No: " + indexNo;
 
+const marksRef = collection(db, "students", indexNo, "monthlyMarks");
 
+const marksSnap = await getDocs(marksRef);
+
+let table = "";
+
+marksSnap.forEach((doc)=>{
+
+const mark = doc.data();
+
+table += `
+<tr>
+<td>${mark.exam}</td>
+<td>${mark.marks}</td>
+<td>${mark.total}</td>
+<td>${mark.percentage}%</td>
+<td>${mark.rank}</td>
+</tr>
+`;
+
+});
+
+document.getElementById("marksTable").innerHTML = table;
 
 }
 
