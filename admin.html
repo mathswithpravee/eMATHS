@@ -120,9 +120,20 @@ Save Student
 <option value="10">Grade 10</option>
 
 <option value="11">Grade 11</option>
-
+<br><br>
 </select>
 
+<select id="testType">
+
+<option value="">Select Test Type</option>
+
+<option value="Monthly">Monthly Test</option>
+
+<option value="Term">Term Test</option>
+
+<option value="Paper">Paper Class</option>
+
+</select>
 
 <br><br>
 
@@ -190,7 +201,68 @@ Select Student
 </select>
 
 <br><br>
+<div id="monthlyBox">
 
+<select id="year">
+
+<option value="">Select Year</option>
+
+<option value="2026">2026</option>
+
+<option value="2027">2027</option>
+
+</select>
+
+<br><br>
+
+<select id="month">
+
+<option value="">Select Month</option>
+
+<option value="01">January</option>
+<option value="02">February</option>
+<option value="03">March</option>
+<option value="04">April</option>
+<option value="05">May</option>
+<option value="06">June</option>
+<option value="07">July</option>
+<option value="08">August</option>
+<option value="09">September</option>
+<option value="10">October</option>
+<option value="11">November</option>
+<option value="12">December</option>
+
+</select>
+
+</div>
+
+
+
+<div id="termBox" style="display:none;">
+
+<select id="term">
+
+<option value="">Select Term</option>
+
+<option value="1">Term 1</option>
+
+<option value="2">Term 2</option>
+
+<option value="3">Term 3</option>
+
+</select>
+
+</div>
+
+
+
+<div id="paperBox" style="display:none;">
+
+<input id="paperNo" placeholder="Paper Number">
+
+</div>
+
+<br><br>
 
 <input id="marks" placeholder="Marks">
 
@@ -468,6 +540,14 @@ document.getElementById("markIndex").value;
 const exam =
 document.getElementById("exam").value;
 
+const testType =
+document.getElementById("testType").value;
+
+let examId = "";
+let examName = "";
+
+
+if(testType == "Monthly"){
 
 const year =
 document.getElementById("year").value;
@@ -475,8 +555,60 @@ document.getElementById("year").value;
 const month =
 document.getElementById("month").value;
 
+examId = year + "-" + month;
 
-const examMonth = year + "-" + month;
+const monthNames = [
+"",
+"January",
+"February",
+"March",
+"April",
+"May",
+"June",
+"July",
+"August",
+"September",
+"October",
+"November",
+"December"
+];
+
+examName =
+monthNames[Number(month)] + " Monthly Test";
+
+}
+
+else if(testType == "Term"){
+
+const year =
+document.getElementById("year").value;
+
+const term =
+document.getElementById("term").value;
+
+examId =
+year + "-Term" + term;
+
+examName =
+"Term " + term + " Test";
+
+}
+
+else if(testType == "Paper"){
+
+const year =
+document.getElementById("year").value;
+
+const paperNo =
+document.getElementById("paperNo").value;
+
+examId =
+year + "-Paper" + paperNo;
+
+examName =
+"Paper Class " + paperNo;
+
+}
 
 
 
@@ -524,7 +656,7 @@ db,
 "students",
 student.id,
 "monthlyMarks",
-examMonth
+examId
 );
 
 
@@ -563,7 +695,8 @@ doc(db,"students",indexNo,"monthlyMarks",month),
 
 {
 
-exam:exam,
+exam: examName,
+testType: testType,
 
 marks:marks,
 
@@ -598,6 +731,33 @@ error.message;
 
 };
 
+const testType =
+document.getElementById("testType");
 
+testType.addEventListener("change",function(){
+
+document.getElementById("monthlyBox").style.display="none";
+document.getElementById("termBox").style.display="none";
+document.getElementById("paperBox").style.display="none";
+
+if(this.value=="Monthly"){
+
+document.getElementById("monthlyBox").style.display="block";
+
+}
+
+else if(this.value=="Term"){
+
+document.getElementById("termBox").style.display="block";
+
+}
+
+else if(this.value=="Paper"){
+
+document.getElementById("paperBox").style.display="block";
+
+}
+
+});
 
 </script>
