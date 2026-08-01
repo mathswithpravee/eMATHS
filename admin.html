@@ -27,7 +27,7 @@ padding:20px;
 border-radius:10px;
 }
 
-input, select{
+input,select{
 padding:10px;
 width:70%;
 }
@@ -63,6 +63,8 @@ width:100%;
 
 
 
+<!-- ADD STUDENT -->
+
 <div class="card">
 
 <h2>➕ Add Student</h2>
@@ -72,23 +74,31 @@ width:100%;
 
 <br><br>
 
+
 <input id="name" placeholder="Student Name">
 
 <br><br>
+
 
 <input id="grade" placeholder="Grade">
 
 <br><br>
 
+
 <input id="email" placeholder="Email">
 
 <br><br>
+
+
 <input id="password" placeholder="Password">
 
 <br><br>
 
+
 <button onclick="addStudent()">
+
 Save Student
+
 </button>
 
 
@@ -100,14 +110,20 @@ Save Student
 
 
 
+
+<!-- ADD MARKS -->
+
 <div class="card">
 
-<h2>📊 Add Monthly Marks</h2>
+<h2>📊 Add Marks</h2>
+
 
 
 <select id="markGrade">
 
-<option value="">Select Grade</option>
+<option value="">
+Select Grade
+</option>
 
 <option value="6">Grade 6</option>
 
@@ -120,25 +136,49 @@ Save Student
 <option value="10">Grade 10</option>
 
 <option value="11">Grade 11</option>
-<br><br>
+
+
 </select>
+
+
+<br><br>
+
+
+
 
 <select id="testType">
 
-<option value="">Select Test Type</option>
 
-<option value="Monthly">Monthly Test</option>
+<option value="">
+Select Test Type
+</option>
 
-<option value="Term">Term Test</option>
 
-<option value="Paper">Paper Class</option>
+<option value="Monthly">
+Monthly Test
+</option>
+
+
+<option value="Term">
+Term Test
+</option>
+
+
+<option value="Paper">
+Paper Class
+</option>
+
 
 </select>
+
 
 <br><br>
 
 
+
+
 <select id="markIndex">
+
 
 <option value="">
 Select Student
@@ -151,18 +191,31 @@ Select Student
 <br><br>
 
 
-<input id="exam" placeholder="Exam Name">
 
-<br><br>
+
+
+<!-- MONTHLY -->
+
+<div id="monthlyBox" style="display:none;">
 
 
 <select id="year">
 
-<option value="">Select Year</option>
 
-<option value="2026">2026</option>
+<option value="">
+Select Year
+</option>
 
-<option value="2027">2027</option>
+
+<option value="2026">
+2026
+</option>
+
+
+<option value="2027">
+2027
+</option>
+
 
 </select>
 
@@ -170,9 +223,15 @@ Select Student
 <br><br>
 
 
+
+
 <select id="month">
 
-<option value="">Select Month</option>
+
+<option value="">
+Select Month
+</option>
+
 
 <option value="01">January</option>
 
@@ -198,123 +257,88 @@ Select Student
 
 <option value="12">December</option>
 
-</select>
-
-<br><br>
-<div id="monthlyBox">
-
-<select id="year">
-
-<option value="">Select Year</option>
-
-<option value="2026">2026</option>
-
-<option value="2027">2027</option>
 
 </select>
 
-<br><br>
-
-<select id="month">
-
-<option value="">Select Month</option>
-
-<option value="01">January</option>
-<option value="02">February</option>
-<option value="03">March</option>
-<option value="04">April</option>
-<option value="05">May</option>
-<option value="06">June</option>
-<option value="07">July</option>
-<option value="08">August</option>
-<option value="09">September</option>
-<option value="10">October</option>
-<option value="11">November</option>
-<option value="12">December</option>
-
-</select>
 
 </div>
 
 
+
+
+
+<!-- TERM -->
 
 <div id="termBox" style="display:none;">
 
+
 <select id="term">
 
-<option value="">Select Term</option>
 
-<option value="1">Term 1</option>
+<option value="">
+Select Term
+</option>
 
-<option value="2">Term 2</option>
 
-<option value="3">Term 3</option>
+<option value="1">
+Term 1
+</option>
+
+
+<option value="2">
+Term 2
+</option>
+
+
+<option value="3">
+Term 3
+</option>
+
 
 </select>
 
+
 </div>
 
 
+
+
+
+<!-- PAPER -->
 
 <div id="paperBox" style="display:none;">
 
+
 <input id="paperNo" placeholder="Paper Number">
+
 
 </div>
 
+
+
 <br><br>
+
+
 
 <input id="marks" placeholder="Marks">
 
+
 <br><br>
+
 
 
 <input id="total" placeholder="Total Marks">
 
+
 <br><br>
+
 
 
 <input id="percentage" placeholder="Percentage" readonly>
-<script>
-
-document.getElementById("marks")
-.addEventListener("input", calculatePercentage);
-
-document.getElementById("total")
-.addEventListener("input", calculatePercentage);
-
-
-function calculatePercentage(){
-
-const marks =
-Number(document.getElementById("marks").value);
-
-
-const total =
-Number(document.getElementById("total").value);
-
-
-if(total > 0){
-
-const percentage = (marks / total) * 100;
-
-
-document.getElementById("percentage").value =
-percentage.toFixed(2);
-
-}
-
-}
-
-</script>
-
-<br><br>
-
-
-<input id="rank" placeholder="Rank" readonly>
 
 
 <br><br>
+
 
 
 <button onclick="addMarks()">
@@ -334,7 +358,7 @@ import { initializeApp }
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 
-import { 
+import {
 getFirestore,
 doc,
 setDoc,
@@ -370,9 +394,11 @@ const db = getFirestore(app);
 
 
 
-// =====================
+
+
+// =========================
 // LOAD STUDENTS BY GRADE
-// =====================
+// =========================
 
 
 const gradeSelect =
@@ -384,10 +410,11 @@ document.getElementById("markIndex");
 
 
 
-gradeSelect.addEventListener("change", async ()=>{
+gradeSelect.addEventListener("change", async function(){
 
 
 studentSelect.innerHTML =
+
 `
 <option value="">
 Select Student
@@ -414,11 +441,13 @@ await getDocs(studentsRef);
 snapshot.forEach((student)=>{
 
 
-const data = student.data();
+const data =
+student.data();
 
 
 
 if(String(data.grade) === String(selectedGrade)){
+
 
 
 let option =
@@ -439,6 +468,7 @@ student.id + " - " + data.name;
 studentSelect.appendChild(option);
 
 
+
 }
 
 
@@ -451,9 +481,12 @@ studentSelect.appendChild(option);
 
 
 
-// =====================
+
+
+
+// =========================
 // ADD STUDENT
-// =====================
+// =========================
 
 
 window.addStudent = async function(){
@@ -466,19 +499,27 @@ const indexNo =
 document.getElementById("indexNo").value;
 
 
+
 const name =
 document.getElementById("name").value;
+
 
 
 const grade =
 document.getElementById("grade").value;
 
 
+
 const email =
 document.getElementById("email").value;
 
+
+
 const password =
 document.getElementById("password").value;
+
+
+
 
 await setDoc(
 
@@ -491,40 +532,149 @@ name:name,
 grade:grade,
 
 email:email,
-  
-password:password,
+
+password:password
+
 }
 
 );
 
 
 
+
 document.getElementById("message").innerHTML =
+
 "Student Added Successfully ✅";
 
 
 
 }
 
+
 catch(error){
 
 
 document.getElementById("message").innerHTML =
+
 error.message;
 
 
 }
 
 
+
 };
 
+// =========================
+// TEST TYPE CHANGE
+// =========================
+
+
+const testTypeSelect =
+document.getElementById("testType");
+
+
+
+testTypeSelect.addEventListener("change",function(){
+
+
+document.getElementById("monthlyBox").style.display="none";
+
+document.getElementById("termBox").style.display="none";
+
+document.getElementById("paperBox").style.display="none";
+
+
+
+if(this.value=="Monthly"){
+
+
+document.getElementById("monthlyBox").style.display="block";
+
+
+}
+
+
+else if(this.value=="Term"){
+
+
+document.getElementById("termBox").style.display="block";
+
+
+}
+
+
+else if(this.value=="Paper"){
+
+
+document.getElementById("paperBox").style.display="block";
+
+
+}
+
+
+});
 
 
 
 
-// =====================
-// ADD MONTHLY MARKS
-// =====================
+
+// =========================
+// PERCENTAGE CALCULATION
+// =========================
+
+
+document.getElementById("marks")
+.addEventListener("input",calculatePercentage);
+
+
+
+document.getElementById("total")
+.addEventListener("input",calculatePercentage);
+
+
+
+function calculatePercentage(){
+
+
+const marks =
+Number(document.getElementById("marks").value);
+
+
+
+const total =
+Number(document.getElementById("total").value);
+
+
+
+if(total>0){
+
+
+const percentage =
+(marks/total)*100;
+
+
+
+document.getElementById("percentage").value =
+
+percentage.toFixed(2);
+
+
+
+}
+
+
+}
+
+
+
+
+
+
+
+// =========================
+// ADD MARKS
+// =========================
 
 
 window.addMarks = async function(){
@@ -533,31 +683,47 @@ window.addMarks = async function(){
 try{
 
 
+
 const indexNo =
 document.getElementById("markIndex").value;
 
 
-const exam =
-document.getElementById("exam").value;
 
 const testType =
 document.getElementById("testType").value;
 
-let examId = "";
-let examName = "";
 
 
-if(testType == "Monthly"){
+let examId="";
+
+let examName="";
+
+
+
+
+// MONTHLY
+
+if(testType=="Monthly"){
+
+
 
 const year =
 document.getElementById("year").value;
 
+
+
 const month =
 document.getElementById("month").value;
 
-examId = year + "-" + month;
 
-const monthNames = [
+
+examId =
+year+"-"+month;
+
+
+
+const monthNames=[
+
 "",
 "January",
 "February",
@@ -571,44 +737,83 @@ const monthNames = [
 "October",
 "November",
 "December"
+
 ];
 
+
+
 examName =
-monthNames[Number(month)] + " Monthly Test";
+monthNames[Number(month)]+" Monthly Test";
+
+
 
 }
 
-else if(testType == "Term"){
+
+
+
+// TERM
+
+else if(testType=="Term"){
+
+
 
 const year =
 document.getElementById("year").value;
+
+
 
 const term =
 document.getElementById("term").value;
 
+
+
 examId =
-year + "-Term" + term;
+year+"-Term"+term;
+
+
 
 examName =
-"Term " + term + " Test";
+"Term "+term+" Test";
+
+
 
 }
 
-else if(testType == "Paper"){
+
+
+
+
+// PAPER
+
+else if(testType=="Paper"){
+
+
 
 const year =
 document.getElementById("year").value;
 
+
+
 const paperNo =
 document.getElementById("paperNo").value;
 
+
+
 examId =
-year + "-Paper" + paperNo;
+year+"-Paper"+paperNo;
+
+
 
 examName =
-"Paper Class " + paperNo;
+"Paper Class "+paperNo;
+
+
 
 }
+
+
+
 
 
 
@@ -623,54 +828,65 @@ Number(document.getElementById("total").value);
 
 
 const percentage =
-(marks / total) * 100;
+Number(((marks/total)*100).toFixed(2));
 
-let rank = 1;
 
-const selectedGrade =
+
+let rank=1;
+
+
+
+const grade =
 document.getElementById("markGrade").value;
 
 
-const studentsRef =
-collection(db,"students");
-
 
 const studentsSnap =
-await getDocs(studentsRef);
+await getDocs(collection(db,"students"));
 
 
 
 for(const student of studentsSnap.docs){
 
 
-const data = student.data();
+
+const data =
+student.data();
 
 
 
-if(String(data.grade) === String(selectedGrade)){
+if(String(data.grade)==String(grade)){
 
 
-const oldMarkRef =
+
+const oldRef =
 doc(
+
 db,
+
 "students",
+
 student.id,
+
 "monthlyMarks",
+
 examId
+
 );
 
 
 
-const oldMarkSnap =
-await getDoc(oldMarkRef);
+const oldSnap =
+await getDoc(oldRef);
 
 
 
-if(oldMarkSnap.exists()){
+if(oldSnap.exists()){
+
 
 
 const oldData =
-oldMarkSnap.data();
+oldSnap.data();
 
 
 
@@ -681,30 +897,51 @@ rank++;
 }
 
 
-}
-
 
 }
 
 
 }
+
+
+
+}
+
+
+
+
 
 await setDoc(
 
-doc(db,"students",indexNo,"monthlyMarks",month),
+doc(
+
+db,
+
+"students",
+
+indexNo,
+
+"monthlyMarks",
+
+examId
+
+),
+
 
 {
 
-exam: examName,
-testType: testType,
+exam:examName,
+
+testType:testType,
 
 marks:marks,
 
 total:total,
 
-percentage:Number(percentage.toFixed(2)),
+percentage:percentage,
 
 rank:rank
+
 
 }
 
@@ -712,8 +949,11 @@ rank:rank
 
 
 
+
 document.getElementById("markMessage").innerHTML =
+
 "Marks Added Successfully ✅";
+
 
 
 }
@@ -723,41 +963,12 @@ catch(error){
 
 
 document.getElementById("markMessage").innerHTML =
+
 error.message;
 
 
 }
 
 
+
 };
-
-const testType =
-document.getElementById("testType");
-
-testType.addEventListener("change",function(){
-
-document.getElementById("monthlyBox").style.display="none";
-document.getElementById("termBox").style.display="none";
-document.getElementById("paperBox").style.display="none";
-
-if(this.value=="Monthly"){
-
-document.getElementById("monthlyBox").style.display="block";
-
-}
-
-else if(this.value=="Term"){
-
-document.getElementById("termBox").style.display="block";
-
-}
-
-else if(this.value=="Paper"){
-
-document.getElementById("paperBox").style.display="block";
-
-}
-
-});
-
-</script>
