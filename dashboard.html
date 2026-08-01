@@ -203,6 +203,12 @@ document.getElementById("studentIndex").innerHTML =
 const marksRef = collection(db, "students", indexNo, "monthlyMarks");
 
 const marksSnap = await getDocs(marksRef);
+    
+console.log("Marks count:", marksSnap.size);
+
+marksSnap.forEach((doc)=>{
+    console.log(doc.data());
+});
 
 let table = "";
 
