@@ -212,7 +212,7 @@ snapshot.forEach((student)=>{
 const data = student.data();
 
 
-if(data.grade == selectedGrade){
+if(String(data.grade) == String(selectedGrade)){
 
 
 let option = document.createElement("option");
