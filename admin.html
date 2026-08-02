@@ -2181,7 +2181,120 @@ examSelect.appendChild(option);
 
 
 
-loadExamDropdown();    
+loadExamDropdown(); 
+
+// ========================
+// ADD QUIZ QUESTION
+// ========================
+
+window.addQuestion = async function(){
+
+
+try{
+
+
+const examId =
+document.getElementById("questionExam").value;
+
+
+const question =
+document.getElementById("questionText").value;
+
+
+const A =
+document.getElementById("optionA").value;
+
+
+const B =
+document.getElementById("optionB").value;
+
+
+const C =
+document.getElementById("optionC").value;
+
+
+const D =
+document.getElementById("optionD").value;
+
+
+const answer =
+document.getElementById("correctAnswer").value;
+
+
+
+if(examId=="" || question=="" || answer==""){
+
+alert("Fill all details");
+
+return;
+
+}
+
+
+
+const questionId =
+Date.now().toString();
+
+
+
+await setDoc(
+
+doc(
+db,
+"exams",
+examId,
+"questions",
+questionId
+),
+
+{
+
+question:question,
+
+A:A,
+
+B:B,
+
+C:C,
+
+D:D,
+
+answer:answer
+
+}
+
+);
+
+
+
+document.getElementById("questionMessage").innerHTML =
+"Question Added Successfully ✅";
+
+
+
+// clear fields
+
+document.getElementById("questionText").value="";
+document.getElementById("optionA").value="";
+document.getElementById("optionB").value="";
+document.getElementById("optionC").value="";
+document.getElementById("optionD").value="";
+document.getElementById("correctAnswer").value="";
+
+
+}
+
+
+catch(error){
+
+document.getElementById("questionMessage").innerHTML =
+error.message;
+
+}
+
+
+};
+    
 </script>
 
 
