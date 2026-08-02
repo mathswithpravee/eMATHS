@@ -187,12 +187,10 @@ studentSnap.data();
 
 
 if(data.password === password){
+localStorage.setItem("studentIndex", indexNo);
 
+localStorage.setItem("studentGrade", data.grade);
 
-localStorage.setItem(
-"studentIndex",
-indexNo
-);
 
 
 
