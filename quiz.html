@@ -153,6 +153,8 @@ appId: "1:790474740591:web:a54ea2419f29c0178a8e9a"
 
 
 
+
+
 const app = initializeApp(firebaseConfig);
 
 const db = getFirestore(app);
@@ -162,13 +164,35 @@ const db = getFirestore(app);
 
 
 const examId =
+
 localStorage.getItem("examId");
 
 
-// Student index number
 
 const studentIndex =
+
 localStorage.getItem("studentIndex");
+
+
+
+const studentGrade =
+
+localStorage.getItem("studentGrade");
+
+
+
+
+
+// LOGIN CHECK
+
+if(!studentIndex || !studentGrade || !examId){
+
+
+window.location.href="index.html";
+
+
+}
+
 
 
 
@@ -184,28 +208,71 @@ async function loadQuiz(){
 
 
 
+const examRef =
+
+doc(db,"exams",examId);
+
+
+
 const examSnap =
 
-await getDoc(
-
-doc(db,"exams",examId)
-
-);
+await getDoc(examRef);
 
 
 
-if(examSnap.exists()){
 
 
-examName =
-examSnap.data().title;
+if(!examSnap.exists()){
 
 
-document.getElementById("examTitle").innerHTML =
-examName;
+alert("Exam not found");
+
+window.location.href="exam.html";
+
+return;
 
 
 }
+
+
+
+
+
+const examData = examSnap.data();
+
+
+
+
+
+// GRADE CHECK
+
+if(String(examData.grade) !== String(studentGrade)){
+
+
+alert("You cannot access this exam");
+
+
+window.location.href="exam.html";
+
+
+return;
+
+
+}
+
+
+
+
+
+examName = examData.title;
+
+
+
+document.getElementById("examTitle").innerHTML =
+
+examName;
+
+
 
 
 
@@ -216,9 +283,13 @@ const qSnap =
 await getDocs(
 
 collection(
+
 db,
+
 "exams",
+
 examId,
+
 "questions"
 
 )
@@ -240,10 +311,13 @@ document.getElementById("quizForm");
 qSnap.forEach((q,index)=>{
 
 
-const data=q.data();
+const data = q.data();
+
 
 
 questions.push(data);
+
+
 
 
 
@@ -305,9 +379,7 @@ D. ${data.D}
 </label>
 
 
-
 </div>
-
 
 
 `;
@@ -326,7 +398,6 @@ D. ${data.D}
 
 
 
-
 window.submitQuiz = async function(){
 
 
@@ -335,7 +406,6 @@ let score=0;
 
 
 questions.forEach((q,index)=>{
-
 
 
 const selected =
@@ -352,6 +422,7 @@ if(selected && selected.value == q.answer){
 
 
 score++;
+
 
 }
 
@@ -370,9 +441,6 @@ const percentage =
 
 
 
-
-
-// Save Result
 
 
 
@@ -419,11 +487,11 @@ date:new Date()
 
 
 
-
 document.getElementById("result").innerHTML =
 
 
 `
+
 ✅ Quiz Completed
 
 <br><br>
@@ -450,7 +518,6 @@ loadQuiz();
 
 
 </script>
-
 
 
 </body>
