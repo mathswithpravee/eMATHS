@@ -14,13 +14,16 @@ body{
 font-family:Arial;
 background:#f4f7fb;
 text-align:center;
+margin:0;
 }
+
 
 .header{
 background:#1e88e5;
 color:white;
 padding:20px;
 }
+
 
 .card{
 
@@ -33,6 +36,7 @@ border-radius:10px;
 
 }
 
+
 .question{
 
 background:#eeeeee;
@@ -42,6 +46,7 @@ border-radius:10px;
 text-align:left;
 
 }
+
 
 button{
 
@@ -66,6 +71,7 @@ font-weight:bold;
 </style>
 
 </head>
+
 
 
 <body>
@@ -101,20 +107,24 @@ Time Loading...
 </form>
 
 
+
 <br>
 
 
-<button onclick="submitQuiz()">
+<button onclick="submitQuiz(false)">
 
 Submit Quiz
 
 </button>
 
 
+
 <h3 id="result"></h3>
 
 
 </div>
+
+
 
 
 
@@ -150,6 +160,7 @@ from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
 
+
 const firebaseConfig = {
 
 
@@ -171,7 +182,9 @@ appId: "1:790474740591:web:a54ea2419f29c0178a8e9a"
 
 
 
+
 const app = initializeApp(firebaseConfig);
+
 
 const db = getFirestore(app);
 
@@ -179,23 +192,35 @@ const db = getFirestore(app);
 
 
 
+
+
 const examId =
+
 localStorage.getItem("examId");
 
 
+
 const studentIndex =
+
 localStorage.getItem("studentIndex");
 
 
+
 const studentGrade =
+
 localStorage.getItem("studentGrade");
+
+
+
 
 
 
 
 if(!studentIndex || !studentGrade || !examId){
 
+
 window.location.href="index.html";
+
 
 }
 
@@ -203,16 +228,22 @@ window.location.href="index.html";
 
 
 
+
+
 let questions=[];
+
 
 let examName="";
 
 
-let timerInterval;
-
 let examTime=10;
 
-let timeLeft;
+
+let timeLeft=0;
+
+
+let timerInterval;
+
 
 let submitted=false;
 
@@ -220,7 +251,10 @@ let submitted=false;
 
 
 
+
+
 async function loadQuiz(){
+
 
 
 const examSnap = await getDoc(
@@ -233,16 +267,24 @@ doc(db,"exams",examId)
 
 
 
+
+
 if(!examSnap.exists()){
 
 
 alert("Exam not found");
 
+
 window.location.href="exam.html";
+
 
 return;
 
+
 }
+
+
+
 
 
 
@@ -253,12 +295,16 @@ const examData = examSnap.data();
 
 
 
+
+
 if(String(examData.grade)!==String(studentGrade)){
 
 
 alert("You cannot access this exam");
 
+
 window.location.href="exam.html";
+
 
 return;
 
@@ -267,20 +313,35 @@ return;
 
 
 
-examName=examData.title;
 
 
-document.getElementById("examTitle").innerHTML=
+
+
+examName = examData.title;
+
+
+
+document.getElementById("examTitle").innerHTML =
+
 examName;
 
 
 
-// GET EXAM TIME
+
+
+
+// GET TIME FROM FIRESTORE
+
 
 examTime = Number(examData.time || 10);
 
 
+
 startTimer();
+
+
+
+
 
 
 
@@ -304,58 +365,87 @@ examId,
 
 
 
+
+
 const form =
+
 document.getElementById("quizForm");
+
+
+
 
 
 
 qSnap.forEach((q,index)=>{
 
 
-const data=q.data();
+const data = q.data();
+
 
 
 questions.push(data);
 
 
+
+
+
+
 form.innerHTML += `
 
+
 <div class="question">
+
 
 <h3>${index+1}. ${data.question}</h3>
 
 
 <label>
+
 <input type="radio" name="q${index}" value="A">
+
 A. ${data.A}
+
 </label>
+
 
 <br>
 
 
 <label>
+
 <input type="radio" name="q${index}" value="B">
+
 B. ${data.B}
+
 </label>
+
 
 <br>
 
 
 <label>
+
 <input type="radio" name="q${index}" value="C">
+
 C. ${data.C}
+
 </label>
+
 
 <br>
 
 
 <label>
+
 <input type="radio" name="q${index}" value="D">
+
 D. ${data.D}
+
 </label>
 
 
 </div>
+
 
 `;
 
@@ -365,9 +455,10 @@ D. ${data.D}
 
 
 }
+// =======================
+// TIMER
+// =======================
 
-
-// TIMER FUNCTION
 
 function startTimer(){
 
@@ -381,36 +472,51 @@ timerInterval = setInterval(()=>{
 
 let minutes = Math.floor(timeLeft / 60);
 
+
 let seconds = timeLeft % 60;
 
 
 
 document.getElementById("timer").innerHTML =
 
-"Time Left : " +
+
+"⏱ Time Left : " +
+
 minutes + ":" +
+
 (seconds < 10 ? "0" : "") +
+
 seconds;
 
 
 
-timeLeft--;
 
 
+if(timeLeft <= 0){
 
-if(timeLeft < 0){
 
 
 clearInterval(timerInterval);
 
 
+
 alert("⏰ Time Over! Exam Submitted Automatically");
 
 
-submitQuiz();
+
+submitQuiz(true);
+
+
+
+return;
 
 
 }
+
+
+
+
+timeLeft--;
 
 
 
@@ -425,11 +531,13 @@ submitQuiz();
 
 
 
-
+// =======================
 // SUBMIT QUIZ
+// =======================
 
 
-window.submitQuiz = async function(){
+window.submitQuiz = async function(autoSubmit=false){
+
 
 
 if(submitted){
@@ -437,6 +545,8 @@ if(submitted){
 return;
 
 }
+
+
 
 
 submitted=true;
@@ -448,7 +558,7 @@ clearInterval(timerInterval);
 
 
 
-// CHECK ALREADY COMPLETED
+
 
 
 const resultRef = doc(
@@ -467,7 +577,16 @@ examId
 
 
 
+
+
+
+// CHECK DUPLICATE RESULT
+
+
+
 const oldResult = await getDoc(resultRef);
+
+
 
 
 
@@ -475,9 +594,12 @@ const oldResult = await getDoc(resultRef);
 if(oldResult.exists()){
 
 
+
 document.getElementById("result").innerHTML =
 
+
 "❌ You already completed this exam";
+
 
 
 return;
@@ -489,16 +611,20 @@ return;
 
 
 
+
+
 let score=0;
+
+
+
 
 
 
 questions.forEach((q,index)=>{
 
 
-const selected =
 
-document.querySelector(
+const selected = document.querySelector(
 
 `input[name="q${index}"]:checked`
 
@@ -506,7 +632,11 @@ document.querySelector(
 
 
 
+
+
+
 if(selected && selected.value == q.answer){
+
 
 
 score++;
@@ -523,7 +653,9 @@ score++;
 
 
 
+
 const percentage =
+
 
 ((score/questions.length)*100).toFixed(2);
 
@@ -533,23 +665,29 @@ const percentage =
 
 
 
-
 await setDoc(
 
+
 resultRef,
+
 
 {
 
 
 exam:examName,
 
+
 score:score,
+
 
 total:questions.length,
 
+
 percentage:Number(percentage),
 
+
 date:new Date()
+
 
 
 }
@@ -557,6 +695,7 @@ date:new Date()
 
 
 );
+
 
 
 
@@ -572,13 +711,20 @@ document.getElementById("result").innerHTML =
 
 <br><br>
 
+
 Score : ${score}/${questions.length}
+
 
 <br>
 
+
 Percentage : ${percentage}%
 
+
 `;
+
+
+
 
 
 
@@ -590,7 +736,10 @@ Percentage : ${percentage}%
 
 
 
+
+
 loadQuiz();
+
 
 
 </script>
