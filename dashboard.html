@@ -4,124 +4,116 @@
 <head>
 
 <title>Student Dashboard - Maths with Pravee</title>
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
 <style>
 
 body{
-    font-family: Arial, sans-serif;
-    background:#f4f7fb;
-    text-align:center;
+
+font-family:Arial;
+background:#f4f7fb;
+text-align:center;
+margin:0;
+
 }
+
 
 .header{
-    background:#1e88e5;
-    color:white;
-    padding:25px;
+
+background:#1e88e5;
+color:white;
+padding:20px;
+
 }
+
+
 
 .card{
-    background:white;
-    width:80%;
-    margin:20px auto;
-    padding:20px;
-    border-radius:10px;
+
+background:white;
+width:95%;
+max-width:700px;
+margin:20px auto;
+padding:15px;
+border-radius:10px;
+
+box-sizing:border-box;
+
 }
 
+
+
 button{
-    padding:12px 20px;
-    margin:10px;
-    border:none;
-    border-radius:5px;
-    background:#1e88e5;
-    color:white;
+
+background:#1e88e5;
+color:white;
+border:none;
+padding:12px 20px;
+margin:8px;
+border-radius:5px;
+cursor:pointer;
+width:90%;
+max-width:300px;
+
 }
+
 
 
 table{
-    width:100%;
-    border-collapse:collapse;
+
+width:100%;
+border-collapse:collapse;
+font-size:14px;
+
 }
+
 
 
 th,td{
 
 padding:10px;
-
 border:1px solid #ddd;
 
 }
 
-*{
-    box-sizing:border-box;
-}
 
 
-body{
-    margin:0;
-    padding:0;
-}
+th{
 
+background:#1e88e5;
+color:white;
 
-.card{
-    width:95%;
-    max-width:700px;
-    margin:20px auto;
-    padding:15px;
-}
-
-
-button{
-    width:90%;
-    max-width:300px;
-    padding:12px;
-    margin:8px;
-}
-
-
-canvas{
-    max-width:100%;
-}
-
-
-table{
-    width:100%;
-    font-size:14px;
 }
 
 
 
 @media(max-width:600px){
 
-.header{
-    padding:15px;
+
+table{
+
+font-size:11px;
+
 }
 
 
 .header h1{
-    font-size:24px;
+
+font-size:24px;
+
+}
+
+
 }
 
 
-.header h3{
-    font-size:18px;
-}
 
-
-.card{
-    width:95%;
-    padding:12px;
-}
-
-
-table{
-    font-size:11px;
-}
-
-}
 </style>
-
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 
 </head>
@@ -134,22 +126,28 @@ table{
 
 <div class="header">
 
+
 <h1>Maths with Pravee</h1>
 
 <h3>Student Dashboard</h3>
+
 
 </div>
 
 
 
 
+
 <div class="card">
+
 
 <h2>Welcome 👋</h2>
 
 
 <p id="studentName">
+
 Loading...
+
 </p>
 
 
@@ -164,22 +162,39 @@ Loading...
 
 
 
+
+
 <div class="card">
 
 
 <h2>Learning</h2>
 
 
-<button>📚 Lessons</button>
+<button onclick="openLessons()">
+
+📚 Lessons
+
+</button>
 
 
-<button>🎥 Videos</button>
+
+<button onclick="openVideos()">
+
+🎥 Videos
+
+</button>
 
 
-<button>📄 Notes</button>
+
+<button>
+
+📄 Notes
+
+</button>
 
 
 </div>
+
 
 
 
@@ -192,11 +207,15 @@ Loading...
 
 
 <button onclick="openExam()">
+
 📝 Exams
+
 </button>
 
 
 </div>
+
+
 
 
 
@@ -208,23 +227,33 @@ Loading...
 <h2>📈 Performance Summary</h2>
 
 
+
 <p id="average">
+
 Average: Loading...
+
 </p>
+
 
 
 <p id="bestResult">
+
 Best Result: Loading...
+
 </p>
+
 
 
 <p id="testCount">
+
 Tests Completed: Loading...
+
 </p>
 
 
-
 </div>
+
+
 
 
 
@@ -236,11 +265,11 @@ Tests Completed: Loading...
 <h2>📊 Monthly Results</h2>
 
 
+
 <table>
 
 
-<tr style="background:#1e88e5;color:white;">
-
+<tr>
 
 <th>Month</th>
 
@@ -271,7 +300,14 @@ Tests Completed: Loading...
 
 </div>
 
+
+
+
+
+
+
 <div class="card">
+
 
 <h2>📝 My Quiz Results</h2>
 
@@ -279,7 +315,8 @@ Tests Completed: Loading...
 <table>
 
 
-<tr style="background:#1e88e5;color:white;">
+<tr>
+
 
 <th>Exam</th>
 
@@ -289,7 +326,9 @@ Tests Completed: Loading...
 
 <th>Date</th>
 
+
 </tr>
+
 
 
 <tbody id="quizResultsTable">
@@ -305,6 +344,11 @@ Tests Completed: Loading...
 
 
 
+
+
+
+
+
 <div class="card">
 
 
@@ -315,20 +359,64 @@ Tests Completed: Loading...
 
 
 </div>
+
+
+
+
+
+<script>
+
+
+function openExam(){
+
+window.location.href="exam.html";
+
+}
+
+
+
+function openLessons(){
+
+window.location.href="lessons.html";
+
+}
+
+
+
+function openVideos(){
+
+window.location.href="videos.html";
+
+}
+
+
+
+</script>
 <script type="module">
 
-import { initializeApp } 
+
+import { initializeApp }
+
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 
 import {
+
 getFirestore,
+
 doc,
+
 getDoc,
+
 collection,
+
 getDocs
+
 }
+
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+
 
 
 
@@ -350,9 +438,14 @@ appId: "1:790474740591:web:a54ea2419f29c0178a8e9a"
 
 
 
+
+
 const app = initializeApp(firebaseConfig);
 
+
 const db = getFirestore(app);
+
+
 
 
 
@@ -360,76 +453,287 @@ const indexNo = localStorage.getItem("studentIndex");
 
 
 
+
+
+
 async function loadStudent(){
+
 
 
 if(!indexNo){
 
+
 document.getElementById("studentName").innerHTML =
+
 "Please Login First";
 
+
 return;
+
 
 }
 
 
 
+
+
 const studentRef =
+
 doc(db,"students",indexNo);
 
 
 
 const studentSnap =
+
 await getDoc(studentRef);
 
 
 
-if(studentSnap.exists()){
 
 
-const data =
-studentSnap.data();
+if(!studentSnap.exists()){
+
+
+document.getElementById("studentName").innerHTML =
+
+"Student Not Found";
+
+
+return;
+
+
+}
+
+
+
+
+
+const studentData = studentSnap.data();
+
+
 
 
 
 document.getElementById("studentName").innerHTML =
-"Name: " + data.name;
+
+"Name : " + studentData.name;
 
 
 
 document.getElementById("studentGrade").innerHTML =
-"Grade: " + data.grade;
+
+"Grade : " + studentData.grade;
 
 
 
 document.getElementById("studentIndex").innerHTML =
-"Index No: " + indexNo;
 
+"Index No : " + indexNo;
+
+
+
+
+
+
+
+
+// MONTHLY RESULTS
 
 
 
 const marksRef =
-collection(db,"students",indexNo,"monthlyMarks");
+
+collection(
+
+db,
+
+"students",
+
+indexNo,
+
+"monthlyMarks"
+
+);
 
 
 
 const marksSnap =
+
 await getDocs(marksRef);
 
-// LOAD QUIZ RESULTS
+
+
+
+let table="";
+
+
+let total=0;
+
+
+let best=0;
+
+
+let count=0;
+
+
+let labels=[];
+
+
+let values=[];
+
+
+
+
+
+marksSnap.forEach((item)=>{
+
+
+
+const mark=item.data();
+
+
+
+let percentage =
+Number(mark.percentage || 0);
+
+
+
+
+
+table += `
+
+
+<tr>
+
+<td>${item.id}</td>
+
+<td>${mark.exam || "-"}</td>
+
+<td>${mark.marks || 0}</td>
+
+<td>${mark.total || 0}</td>
+
+<td>${percentage}%</td>
+
+<td>${mark.rank || "-"}</td>
+
+</tr>
+
+
+`;
+
+
+
+
+
+total += percentage;
+
+
+count++;
+
+
+
+if(percentage > best){
+
+best=percentage;
+
+}
+
+
+
+
+labels.push(item.id);
+
+
+values.push(percentage);
+
+
+
+});
+
+
+
+
+
+
+document.getElementById("marksTable").innerHTML = table;
+
+
+
+
+
+
+if(count>0){
+
+
+document.getElementById("average").innerHTML =
+
+"Average : " + (total/count).toFixed(2)+"%";
+
+
+
+document.getElementById("bestResult").innerHTML =
+
+"Best Result : " + best+"%";
+
+
+
+document.getElementById("testCount").innerHTML =
+
+"Tests Completed : " + count;
+
+
+
+}
+
+else{
+
+
+document.getElementById("average").innerHTML=
+
+"Average : No Results";
+
+
+document.getElementById("bestResult").innerHTML=
+
+"Best Result : No Results";
+
+
+document.getElementById("testCount").innerHTML=
+
+"Tests Completed : 0";
+
+
+}
+
+
+
+
+
+
+
+// QUIZ RESULTS
+
 
 
 const quizRef =
+
 collection(
+
 db,
+
 "students",
+
 indexNo,
+
 "examResults"
+
 );
 
 
 
 const quizSnap =
+
 await getDocs(quizRef);
 
 
@@ -438,23 +742,33 @@ let quizTable="";
 
 
 
-quizSnap.forEach((quiz)=>{
+
+quizSnap.forEach((item)=>{
 
 
-const data =
-quiz.data();
+const quiz=item.data();
 
 
 
-let date="";
+let date="-";
 
 
-if(data.date){
+
+if(quiz.date){
+
+
+if(quiz.date.seconds){
 
 date =
+
 new Date(
-data.date.seconds*1000
+
+quiz.date.seconds*1000
+
 ).toLocaleDateString();
+
+
+}
 
 }
 
@@ -465,11 +779,11 @@ quizTable += `
 
 <tr>
 
-<td>${data.exam}</td>
+<td>${quiz.exam}</td>
 
-<td>${data.score}/${data.total}</td>
+<td>${quiz.score}/${quiz.total}</td>
 
-<td>${data.percentage}%</td>
+<td>${quiz.percentage}%</td>
 
 <td>${date}</td>
 
@@ -484,149 +798,23 @@ quizTable += `
 
 
 
-document.getElementById("quizResultsTable").innerHTML =
+
+
+document.getElementById("quizResultsTable").innerHTML=
+
 quizTable;
 
 
-let table = "";
 
-let totalPercentage = 0;
 
-let bestPercentage = 0;
 
-let count = 0;
 
 
-let chartLabels = [];
+// CHART
 
-let chartData = [];
 
 
-
-
-marksSnap.forEach((doc)=>{
-
-
-const mark = doc.data();
-
-
-const examMonth = doc.id;
-
-
-const parts = examMonth.split("-");
-
-
-const displayMonth =
-new Date(parts[0],parts[1]-1)
-.toLocaleString("default",{
-
-month:"long",
-
-year:"numeric"
-
-});
-
-
-
-table += `
-
-<tr>
-
-<td>${displayMonth}</td>
-
-<td>${mark.exam}</td>
-
-<td>${mark.marks}</td>
-
-<td>${mark.total}</td>
-
-<td>${mark.percentage}%</td>
-
-<td>${mark.rank}</td>
-
-</tr>
-
-`;
-
-
-
-totalPercentage += Number(mark.percentage);
-
-
-
-if(Number(mark.percentage) > bestPercentage){
-
-bestPercentage = Number(mark.percentage);
-
-}
-
-
-
-count++;
-
-
-
-chartLabels.push(displayMonth);
-
-
-chartData.push(mark.percentage);
-
-
-
-});
-
-
-
-
-
-document.getElementById("marksTable").innerHTML =
-table;
-
-
-
-
-if(count > 0){
-
-
-let average =
-(totalPercentage / count).toFixed(2);
-
-
-
-document.getElementById("average").innerHTML =
-"Average: " + average + "%";
-
-
-
-document.getElementById("bestResult").innerHTML =
-"Best Result: " + bestPercentage + "%";
-
-
-
-document.getElementById("testCount").innerHTML =
-"Tests Completed: " + count;
-
-
-
-}
-
-else{
-
-
-document.getElementById("average").innerHTML =
-"Average: No Results";
-
-
-document.getElementById("bestResult").innerHTML =
-"Best Result: No Results";
-
-
-document.getElementById("testCount").innerHTML =
-"Tests Completed: 0";
-
-
-}
-
+if(labels.length>0){
 
 
 
@@ -643,16 +831,20 @@ type:"line",
 data:{
 
 
-labels:chartLabels,
+labels:labels,
 
 
 datasets:[{
 
+
 label:"Percentage %",
 
-data:chartData,
+
+data:values,
+
 
 borderWidth:3
+
 
 }]
 
@@ -679,30 +871,20 @@ responsive:true
 }
 
 
-else{
-
-
-document.getElementById("studentName").innerHTML =
-"Student not found";
-
 
 }
 
 
-
-}
 
 
 
 loadStudent();
-</script>
-<script>
 
-function openExam(){
-
-window.location.href="exam.html";
-
-}
 
 
 </script>
+
+
+</body>
+
+</html>
