@@ -3,89 +3,71 @@
 
 <head>
 
-<title>Student Login - Maths with Pravee</title>
+<title>Login - Maths with Pravee</title>
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
 <style>
 
 body{
+
 font-family:Arial;
 background:#f4f7fb;
 text-align:center;
+margin:0;
+
 }
+
 
 .card{
+
 background:white;
-width:350px;
-margin:100px auto;
-padding:30px;
+width:90%;
+max-width:400px;
+margin:80px auto;
+padding:25px;
 border-radius:10px;
+
 }
+
+
 
 input{
+
+width:90%;
 padding:12px;
-width:80%;
 margin:10px;
+font-size:16px;
+
 }
 
+
+
 button{
-padding:12px 25px;
+
+width:90%;
+padding:12px;
+margin-top:10px;
 background:#1e88e5;
 color:white;
 border:none;
 border-radius:5px;
-}
-*{
-    box-sizing:border-box;
-}
+font-size:16px;
 
-
-body{
-    margin:0;
-    padding:0;
 }
 
 
-.card{
-    width:90%;
-    max-width:450px;
-    margin:30px auto;
-    padding:20px;
+#message{
+
+color:red;
+margin-top:15px;
+
 }
 
 
-input{
-    width:90%;
-    padding:12px;
-    font-size:16px;
-}
-
-
-button{
-    width:90%;
-    padding:12px;
-    margin-top:10px;
-    font-size:16px;
-}
-
-
-@media(max-width:600px){
-
-h1{
-    font-size:24px;
-}
-
-
-h2{
-    font-size:20px;
-}
-
-
-.card{
-    width:95%;
-}
-
-}
 </style>
+
 
 </head>
 
@@ -93,47 +75,95 @@ h2{
 <body>
 
 
+
 <div class="card">
+
 
 <h2>📚 Maths with Pravee</h2>
 
-<h3>Student Login</h3>
+
+<h3>Login</h3>
 
 
-<input id="indexNo" placeholder="Index Number">
+
+<input 
+id="email"
+placeholder="Email">
 
 
-<input id="password" placeholder="Password" type="password">
+<br>
+
+
+<input 
+id="password"
+type="password"
+placeholder="Password">
+
 
 
 <br>
 
 
 <button onclick="login()">
+
 Login
+
 </button>
+
 
 
 <p id="message"></p>
 
 
+
 </div>
+
+
+
+
+
 
 
 <script type="module">
 
-import { initializeApp } 
+
+import { initializeApp }
+
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
-import { 
-getFirestore,
-doc,
-getDoc
+
+
+import {
+
+getAuth,
+
+signInWithEmailAndPassword
+
 }
+
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+
+
+import {
+
+getFirestore,
+
+doc,
+
+getDoc
+
+}
+
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
+
+
+
+
 const firebaseConfig = {
+
 
 apiKey: "AIzaSyAI-rbO_z9fzIZicTW2SlI0cj__R1Ji6GM",
 
@@ -147,87 +177,205 @@ messagingSenderId: "790474740591",
 
 appId: "1:790474740591:web:a54ea2419f29c0178a8e9a"
 
+
 };
+
+
+
+
 
 
 const app = initializeApp(firebaseConfig);
 
+
+const auth = getAuth(app);
+
+
 const db = getFirestore(app);
+
+
+
+
 
 
 
 window.login = async function(){
 
 
-const indexNo =
-document.getElementById("indexNo").value;
+
+const email =
+
+document.getElementById("email").value;
+
 
 
 const password =
+
 document.getElementById("password").value;
 
 
 
-const studentRef =
-doc(db,"students",indexNo);
 
 
 
-const studentSnap =
-await getDoc(studentRef);
+try{
 
 
 
-if(studentSnap.exists()){
+const userCredential =
 
+await signInWithEmailAndPassword(
 
-const data =
-studentSnap.data();
+auth,
 
+email,
 
+password
 
-if(data.password === password){
-localStorage.setItem("studentIndex", indexNo);
-
-localStorage.setItem("studentGrade", data.grade);
+);
 
 
 
 
-window.location.href =
-"dashboard.html";
+
+const uid =
+
+userCredential.user.uid;
+
+
+
+
+
+
+
+const userDoc =
+
+await getDoc(
+
+doc(db,"users",uid)
+
+);
+
+
+
+
+
+
+if(!userDoc.exists()){
+
+
+document.getElementById("message").innerHTML =
+
+"User profile not found ❌";
+
+
+return;
 
 
 }
+
+
+
+
+
+
+
+const userData = userDoc.data();
+
+
+
+
+
+
+
+if(userData.role === "admin"){
+
+
+
+window.location.href = "admin.html";
+
+
+
+}
+
+
+
+
+
+
+else if(userData.role === "student"){
+
+
+
+localStorage.setItem(
+
+"studentIndex",
+
+userData.indexNo
+
+);
+
+
+
+localStorage.setItem(
+
+"studentGrade",
+
+userData.grade
+
+);
+
+
+
+window.location.href = "dashboard.html";
+
+
+
+}
+
+
+
+
+
 
 else{
 
 
 document.getElementById("message").innerHTML =
-"Wrong Password ❌";
+
+"Invalid User Role ❌";
 
 
 }
 
 
+
 }
 
-else{
+
+
+
+catch(error){
 
 
 document.getElementById("message").innerHTML =
-"Student Not Found ❌";
+
+error.message;
 
 
 }
+
 
 
 };
 
 
+
 </script>
 
 
+
 </body>
+
 
 </html>
