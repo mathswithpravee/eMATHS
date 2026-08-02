@@ -753,11 +753,10 @@ max:100
 
 catch(error){
 
+console.error("DASHBOARD ERROR:",error);
 
-console.log(error);
+alert(error.message);
 
-
-alert("Dashboard loading error");
 
 
 }
