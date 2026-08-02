@@ -366,6 +366,42 @@ Add Video
 
 
 </div>
+<div class="card">
+
+<h2>📝 Manage Exams</h2>
+
+
+<input id="examTitle" placeholder="Exam Name">
+
+<br><br>
+
+
+<select id="examGrade">
+
+<option value="">Select Grade</option>
+
+<option value="6">Grade 6</option>
+<option value="7">Grade 7</option>
+<option value="8">Grade 8</option>
+<option value="9">Grade 9</option>
+<option value="10">Grade 10</option>
+<option value="11">Grade 11</option>
+
+</select>
+
+
+<br><br>
+
+
+<button onclick="addExam()">
+Create Exam
+</button>
+
+
+<p id="examMessage"></p>
+
+
+</div>
 <!-- ADD MARKS -->
 
 <div class="card">
@@ -1915,6 +1951,84 @@ alert(error.message);
 
 
 loadAdminVideos();
+
+// ========================
+// CREATE EXAM
+// ========================
+
+
+window.addExam = async function(){
+
+
+try{
+
+
+const title =
+document.getElementById("examTitle").value;
+
+
+const grade =
+document.getElementById("examGrade").value;
+
+
+
+if(title=="" || grade==""){
+
+alert("Enter Exam Name and Grade");
+
+return;
+
+}
+
+
+
+const examId =
+Date.now().toString();
+
+
+
+await setDoc(
+
+doc(db,"exams",examId),
+
+{
+
+title:title,
+
+grade:grade,
+
+createdAt:new Date()
+
+}
+
+);
+
+
+
+document.getElementById("examMessage").innerHTML =
+"Exam Created Successfully ✅";
+
+
+
+document.getElementById("examTitle").value="";
+
+
+
+}
+
+
+catch(error){
+
+
+document.getElementById("examMessage").innerHTML =
+error.message;
+
+
+}
+
+
+};
+    
 </script>
 
 
