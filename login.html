@@ -88,7 +88,7 @@ margin-top:15px;
 
 <input 
 id="email"
-placeholder="Email">
+placeholder="Student ID / Admin ID">
 
 
 <br>
@@ -135,18 +135,6 @@ from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 import {
 
-getAuth,
-
-signInWithEmailAndPassword
-
-}
-
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
-
-
-import {
-
 getFirestore,
 
 doc,
@@ -156,6 +144,7 @@ getDoc
 }
 
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
 
 
 
@@ -185,13 +174,12 @@ appId: "1:790474740591:web:a54ea2419f29c0178a8e9a"
 
 
 
+
 const app = initializeApp(firebaseConfig);
 
 
-const auth = getAuth(app);
-
-
 const db = getFirestore(app);
+
 
 
 
@@ -203,7 +191,7 @@ window.login = async function(){
 
 
 
-const email =
+const id =
 
 document.getElementById("email").value;
 
@@ -217,56 +205,75 @@ document.getElementById("password").value;
 
 
 
+document.getElementById("message").innerHTML =
+"Checking...";
+
+
+
+
+
+
 
 try{
 
 
 
-const userCredential =
+// =================
+// ADMIN CHECK
+// =================
 
-await signInWithEmailAndPassword(
 
-auth,
 
-email,
+const adminRef =
 
-password
+doc(db,"admins",id);
 
+
+
+const adminSnap =
+
+await getDoc(adminRef);
+
+
+
+
+
+
+if(adminSnap.exists()){
+
+
+
+const adminData =
+adminSnap.data();
+
+
+
+
+if(adminData.password == password){
+
+
+
+localStorage.setItem(
+"adminID",
+id
 );
 
 
 
+window.location.href="admin.html";
 
 
-const uid =
+}
 
-userCredential.user.uid;
-
-
-
-
-
-
-
-const userDoc =
-
-await getDoc(
-
-doc(db,"users",uid)
-
-);
-
-
-
-
-
-
-if(!userDoc.exists()){
+else{
 
 
 document.getElementById("message").innerHTML =
+"Wrong Password ❌";
 
-"User profile not found ❌";
+
+}
+
 
 
 return;
@@ -280,7 +287,21 @@ return;
 
 
 
-const userData = userDoc.data();
+// =================
+// STUDENT CHECK
+// =================
+
+
+
+const studentRef =
+
+doc(db,"students",id);
+
+
+
+const studentSnap =
+
+await getDoc(studentRef);
 
 
 
@@ -288,53 +309,57 @@ const userData = userDoc.data();
 
 
 
-if(userData.role === "admin"){
+if(studentSnap.exists()){
 
 
 
-window.location.href = "admin.html";
-
-
-
-}
+const studentData =
+studentSnap.data();
 
 
 
 
 
 
-else if(userData.role === "student"){
+if(studentData.password == password){
 
 
 
 localStorage.setItem(
-
 "studentIndex",
-
-userData.indexNo
-
+id
 );
 
 
 
 localStorage.setItem(
-
 "studentGrade",
-
-userData.grade
-
+studentData.grade
 );
 
 
 
-window.location.href = "dashboard.html";
 
+
+
+window.location.href="dashboard.html";
+
+
+
+}
+
+else{
+
+
+document.getElementById("message").innerHTML =
+"Wrong Password ❌";
 
 
 }
 
 
 
+}
 
 
 
@@ -342,24 +367,21 @@ else{
 
 
 document.getElementById("message").innerHTML =
-
-"Invalid User Role ❌";
-
-
-}
-
+"User Not Found ❌";
 
 
 }
 
 
+
+}
 
 
 catch(error){
 
 
-document.getElementById("message").innerHTML =
 
+document.getElementById("message").innerHTML =
 error.message;
 
 
@@ -368,6 +390,9 @@ error.message;
 
 
 };
+
+
+
 
 
 
