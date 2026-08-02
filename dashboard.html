@@ -271,7 +271,37 @@ Tests Completed: Loading...
 
 </div>
 
+<div class="card">
 
+<h2>📝 My Quiz Results</h2>
+
+
+<table>
+
+
+<tr style="background:#1e88e5;color:white;">
+
+<th>Exam</th>
+
+<th>Score</th>
+
+<th>%</th>
+
+<th>Date</th>
+
+</tr>
+
+
+<tbody id="quizResultsTable">
+
+
+</tbody>
+
+
+</table>
+
+
+</div>
 
 
 
@@ -386,7 +416,76 @@ collection(db,"students",indexNo,"monthlyMarks");
 const marksSnap =
 await getDocs(marksRef);
 
+// LOAD QUIZ RESULTS
 
+
+const quizRef =
+collection(
+db,
+"students",
+indexNo,
+"examResults"
+);
+
+
+
+const quizSnap =
+await getDocs(quizRef);
+
+
+
+let quizTable="";
+
+
+
+quizSnap.forEach((quiz)=>{
+
+
+const data =
+quiz.data();
+
+
+
+let date="";
+
+
+if(data.date){
+
+date =
+new Date(
+data.date.seconds*1000
+).toLocaleDateString();
+
+}
+
+
+
+quizTable += `
+
+
+<tr>
+
+<td>${data.exam}</td>
+
+<td>${data.score}/${data.total}</td>
+
+<td>${data.percentage}%</td>
+
+<td>${date}</td>
+
+</tr>
+
+
+`;
+
+
+
+});
+
+
+
+document.getElementById("quizResultsTable").innerHTML =
+quizTable;
 
 
 let table = "";
