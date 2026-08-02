@@ -7,45 +7,34 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 
 <style>
 
 body{
-
 font-family:Arial;
 background:#f4f7fb;
 text-align:center;
 margin:0;
-
 }
 
 
 .header{
-
 background:#1e88e5;
 color:white;
 padding:20px;
-
 }
 
 
-
 .card{
-
 background:white;
 width:95%;
 max-width:700px;
 margin:20px auto;
 padding:15px;
 border-radius:10px;
-
-box-sizing:border-box;
-
 }
-
 
 
 button{
@@ -53,34 +42,29 @@ button{
 background:#1e88e5;
 color:white;
 border:none;
-padding:12px 20px;
+padding:12px;
 margin:8px;
 border-radius:5px;
-cursor:pointer;
 width:90%;
 max-width:300px;
 
 }
 
 
-
 table{
 
 width:100%;
 border-collapse:collapse;
-font-size:14px;
 
 }
-
 
 
 th,td{
 
-padding:10px;
 border:1px solid #ddd;
+padding:8px;
 
 }
-
 
 
 th{
@@ -91,26 +75,11 @@ color:white;
 }
 
 
+canvas{
 
-@media(max-width:600px){
-
-
-table{
-
-font-size:11px;
+max-width:100%;
 
 }
-
-
-.header h1{
-
-font-size:24px;
-
-}
-
-
-}
-
 
 
 </style>
@@ -119,43 +88,28 @@ font-size:24px;
 </head>
 
 
-
 <body>
 
 
-
 <div class="header">
-
 
 <h1>Maths with Pravee</h1>
 
 <h3>Student Dashboard</h3>
 
-
 </div>
 
 
 
-
-
 <div class="card">
-
 
 <h2>Welcome 👋</h2>
 
-
-<p id="studentName">
-
-Loading...
-
-</p>
-
+<p id="studentName">Loading...</p>
 
 <p id="studentGrade"></p>
 
-
 <p id="studentIndex"></p>
-
 
 </div>
 
@@ -163,35 +117,23 @@ Loading...
 
 
 
-
 <div class="card">
-
 
 <h2>Learning</h2>
 
-
 <button onclick="openLessons()">
-
 📚 Lessons
-
 </button>
-
 
 
 <button onclick="openVideos()">
-
 🎥 Videos
-
 </button>
-
 
 
 <button>
-
 📄 Notes
-
 </button>
-
 
 </div>
 
@@ -199,9 +141,7 @@ Loading...
 
 
 
-
 <div class="card">
-
 
 <h2>Academic</h2>
 
@@ -220,34 +160,23 @@ Loading...
 
 
 
-
 <div class="card">
-
 
 <h2>📈 Performance Summary</h2>
 
 
-
 <p id="average">
-
 Average: Loading...
-
 </p>
-
 
 
 <p id="bestResult">
-
 Best Result: Loading...
-
 </p>
 
 
-
 <p id="testCount">
-
 Tests Completed: Loading...
-
 </p>
 
 
@@ -261,9 +190,7 @@ Tests Completed: Loading...
 
 <div class="card">
 
-
 <h2>📊 Monthly Results</h2>
-
 
 
 <table>
@@ -287,16 +214,12 @@ Tests Completed: Loading...
 </tr>
 
 
-
 <tbody id="marksTable">
-
 
 </tbody>
 
 
-
 </table>
-
 
 </div>
 
@@ -308,7 +231,6 @@ Tests Completed: Loading...
 
 <div class="card">
 
-
 <h2>📝 My Quiz Results</h2>
 
 
@@ -316,7 +238,6 @@ Tests Completed: Loading...
 
 
 <tr>
-
 
 <th>Exam</th>
 
@@ -330,9 +251,7 @@ Tests Completed: Loading...
 </tr>
 
 
-
 <tbody id="quizResultsTable">
-
 
 </tbody>
 
@@ -341,7 +260,6 @@ Tests Completed: Loading...
 
 
 </div>
-
 
 
 
@@ -374,13 +292,11 @@ window.location.href="exam.html";
 }
 
 
-
 function openLessons(){
 
 window.location.href="lessons.html";
 
 }
-
 
 
 function openVideos(){
@@ -390,9 +306,9 @@ window.location.href="videos.html";
 }
 
 
-
 </script>
-<script type="module">
+
+  <script type="module">
 
 
 import { initializeApp }
@@ -442,7 +358,6 @@ appId: "1:790474740591:web:a54ea2419f29c0178a8e9a"
 
 const app = initializeApp(firebaseConfig);
 
-
 const db = getFirestore(app);
 
 
@@ -455,21 +370,18 @@ const indexNo = localStorage.getItem("studentIndex");
 
 
 
-
 async function loadStudent(){
 
+
+try{
 
 
 if(!indexNo){
 
-
 document.getElementById("studentName").innerHTML =
-
 "Please Login First";
 
-
 return;
-
 
 }
 
@@ -477,15 +389,11 @@ return;
 
 
 
-const studentRef =
+const studentSnap = await getDoc(
 
-doc(db,"students",indexNo);
+doc(db,"students",indexNo)
 
-
-
-const studentSnap =
-
-await getDoc(studentRef);
+);
 
 
 
@@ -495,7 +403,6 @@ if(!studentSnap.exists()){
 
 
 document.getElementById("studentName").innerHTML =
-
 "Student Not Found";
 
 
@@ -508,29 +415,22 @@ return;
 
 
 
-const studentData = studentSnap.data();
+const student = studentSnap.data();
 
 
 
 
 
 document.getElementById("studentName").innerHTML =
-
-"Name : " + studentData.name;
-
+"Name : "+student.name;
 
 
 document.getElementById("studentGrade").innerHTML =
-
-"Grade : " + studentData.grade;
-
+"Grade : "+student.grade;
 
 
 document.getElementById("studentIndex").innerHTML =
-
-"Index No : " + indexNo;
-
-
+"Index No : "+indexNo;
 
 
 
@@ -540,46 +440,33 @@ document.getElementById("studentIndex").innerHTML =
 // MONTHLY RESULTS
 
 
-
-const marksRef =
+const marksSnap = await getDocs(
 
 collection(
-
 db,
-
 "students",
-
 indexNo,
-
 "monthlyMarks"
+)
 
 );
 
-
-
-const marksSnap =
-
-await getDocs(marksRef);
 
 
 
 
 let table="";
 
-
 let total=0;
-
 
 let best=0;
 
-
 let count=0;
-
 
 let labels=[];
 
-
 let values=[];
+
 
 
 
@@ -588,9 +475,7 @@ let values=[];
 marksSnap.forEach((item)=>{
 
 
-
 const mark=item.data();
-
 
 
 let percentage =
@@ -628,9 +513,7 @@ table += `
 
 total += percentage;
 
-
 count++;
-
 
 
 if(percentage > best){
@@ -641,9 +524,7 @@ best=percentage;
 
 
 
-
 labels.push(item.id);
-
 
 values.push(percentage);
 
@@ -656,7 +537,8 @@ values.push(percentage);
 
 
 
-document.getElementById("marksTable").innerHTML = table;
+document.getElementById("marksTable").innerHTML =
+table;
 
 
 
@@ -667,40 +549,31 @@ if(count>0){
 
 
 document.getElementById("average").innerHTML =
-
-"Average : " + (total/count).toFixed(2)+"%";
-
+"Average : "+(total/count).toFixed(2)+"%";
 
 
 document.getElementById("bestResult").innerHTML =
-
-"Best Result : " + best+"%";
-
+"Best Result : "+best+"%";
 
 
 document.getElementById("testCount").innerHTML =
-
-"Tests Completed : " + count;
+"Tests Completed : "+count;
 
 
 
 }
-
 else{
 
 
-document.getElementById("average").innerHTML=
-
+document.getElementById("average").innerHTML =
 "Average : No Results";
 
 
-document.getElementById("bestResult").innerHTML=
-
+document.getElementById("bestResult").innerHTML =
 "Best Result : No Results";
 
 
-document.getElementById("testCount").innerHTML=
-
+document.getElementById("testCount").innerHTML =
 "Tests Completed : 0";
 
 
@@ -715,75 +588,59 @@ document.getElementById("testCount").innerHTML=
 // QUIZ RESULTS
 
 
-
-const quizRef =
+const quizSnap = await getDocs(
 
 collection(
-
 db,
-
 "students",
-
 indexNo,
-
 "examResults"
+)
 
 );
 
 
 
-const quizSnap =
-
-await getDocs(quizRef);
 
 
-
-let quizTable="";
-
+let quizHTML="";
 
 
 
 quizSnap.forEach((item)=>{
 
 
-const quiz=item.data();
-
+const q=item.data();
 
 
 let date="-";
 
 
+if(q.date && q.date.seconds){
 
-if(quiz.date){
-
-
-if(quiz.date.seconds){
 
 date =
-
 new Date(
-
-quiz.date.seconds*1000
-
+q.date.seconds*1000
 ).toLocaleDateString();
 
 
 }
 
-}
 
 
 
-quizTable += `
+
+quizHTML += `
 
 
 <tr>
 
-<td>${quiz.exam}</td>
+<td>${q.exam}</td>
 
-<td>${quiz.score}/${quiz.total}</td>
+<td>${q.score}/${q.total}</td>
 
-<td>${quiz.percentage}%</td>
+<td>${q.percentage}%</td>
 
 <td>${date}</td>
 
@@ -800,29 +657,28 @@ quizTable += `
 
 
 
-document.getElementById("quizResultsTable").innerHTML=
-
-quizTable;
-
+document.getElementById("quizResultsTable").innerHTML =
+quizHTML;
 
 
 
 
 
 
-// CHART
-
-// CHART
 
 
-const chartCanvas = document.getElementById("progressChart");
+// GRAPH
 
 
-if(labels.length > 0){
+if(labels.length>0){
 
 
 
-new Chart(chartCanvas,{
+new Chart(
+
+document.getElementById("progressChart"),
+
+{
 
 
 type:"line",
@@ -879,18 +735,38 @@ max:100
 }
 
 
-});
+
+}
+
+
+);
 
 
 
 }
-else{
 
 
-console.log("No chart data found");
+
 
 
 }
+
+catch(error){
+
+
+console.log(error);
+
+
+alert("Dashboard loading error");
+
+
+}
+
+
+
+}
+
+
 
 
 
