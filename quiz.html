@@ -54,6 +54,15 @@ cursor:pointer;
 
 }
 
+
+#timer{
+
+color:red;
+font-size:22px;
+font-weight:bold;
+
+}
+
 </style>
 
 </head>
@@ -72,12 +81,19 @@ cursor:pointer;
 
 
 
+
 <div class="card">
 
 
 <h2 id="examTitle">
 Loading...
 </h2>
+
+
+<h3 id="timer">
+Time Loading...
+</h3>
+
 
 
 <form id="quizForm">
@@ -164,34 +180,25 @@ const db = getFirestore(app);
 
 
 const examId =
-
 localStorage.getItem("examId");
 
 
-
 const studentIndex =
-
 localStorage.getItem("studentIndex");
 
 
-
 const studentGrade =
-
 localStorage.getItem("studentGrade");
 
 
 
 
-
-// LOGIN CHECK
-
 if(!studentIndex || !studentGrade || !examId){
-
 
 window.location.href="index.html";
 
-
 }
+
 
 
 
@@ -201,22 +208,26 @@ let questions=[];
 let examName="";
 
 
+let timerInterval;
+
+let examTime=10;
+
+let timeLeft;
+
+let submitted=false;
+
+
 
 
 
 async function loadQuiz(){
 
 
+const examSnap = await getDoc(
 
-const examRef =
+doc(db,"exams",examId)
 
-doc(db,"exams",examId);
-
-
-
-const examSnap =
-
-await getDoc(examRef);
+);
 
 
 
@@ -231,9 +242,7 @@ window.location.href="exam.html";
 
 return;
 
-
 }
-
 
 
 
@@ -244,16 +253,12 @@ const examData = examSnap.data();
 
 
 
-// GRADE CHECK
-
-if(String(examData.grade) !== String(studentGrade)){
+if(String(examData.grade)!==String(studentGrade)){
 
 
 alert("You cannot access this exam");
 
-
 window.location.href="exam.html";
-
 
 return;
 
@@ -262,25 +267,24 @@ return;
 
 
 
+examName=examData.title;
 
 
-examName = examData.title;
-
-
-
-document.getElementById("examTitle").innerHTML =
-
+document.getElementById("examTitle").innerHTML=
 examName;
 
 
 
+// GET EXAM TIME
+
+examTime = Number(examData.time || 10);
+
+
+startTimer();
 
 
 
-
-const qSnap =
-
-await getDocs(
+const qSnap = await getDocs(
 
 collection(
 
@@ -301,92 +305,116 @@ examId,
 
 
 const form =
-
 document.getElementById("quizForm");
-
-
 
 
 
 qSnap.forEach((q,index)=>{
 
 
-const data = q.data();
-
+const data=q.data();
 
 
 questions.push(data);
 
 
-
-
-
 form.innerHTML += `
 
-
 <div class="question">
-
 
 <h3>${index+1}. ${data.question}</h3>
 
 
-
 <label>
-
 <input type="radio" name="q${index}" value="A">
-
 A. ${data.A}
-
 </label>
-
 
 <br>
 
 
-
 <label>
-
 <input type="radio" name="q${index}" value="B">
-
 B. ${data.B}
-
 </label>
-
 
 <br>
 
 
-
 <label>
-
 <input type="radio" name="q${index}" value="C">
-
 C. ${data.C}
-
 </label>
-
 
 <br>
 
 
-
 <label>
-
 <input type="radio" name="q${index}" value="D">
-
 D. ${data.D}
-
 </label>
 
 
 </div>
-
 
 `;
 
 
 
 });
+
+
+}
+
+
+// TIMER FUNCTION
+
+function startTimer(){
+
+
+timeLeft = examTime * 60;
+
+
+
+timerInterval = setInterval(()=>{
+
+
+let minutes = Math.floor(timeLeft / 60);
+
+let seconds = timeLeft % 60;
+
+
+
+document.getElementById("timer").innerHTML =
+
+"Time Left : " +
+minutes + ":" +
+(seconds < 10 ? "0" : "") +
+seconds;
+
+
+
+timeLeft--;
+
+
+
+if(timeLeft < 0){
+
+
+clearInterval(timerInterval);
+
+
+alert("⏰ Time Over! Exam Submitted Automatically");
+
+
+submitQuiz();
+
+
+}
+
+
+
+},1000);
 
 
 
@@ -398,7 +426,67 @@ D. ${data.D}
 
 
 
+// SUBMIT QUIZ
+
+
 window.submitQuiz = async function(){
+
+
+if(submitted){
+
+return;
+
+}
+
+
+submitted=true;
+
+
+
+clearInterval(timerInterval);
+
+
+
+
+// CHECK ALREADY COMPLETED
+
+
+const resultRef = doc(
+
+db,
+
+"students",
+
+studentIndex,
+
+"examResults",
+
+examId
+
+);
+
+
+
+const oldResult = await getDoc(resultRef);
+
+
+
+
+if(oldResult.exists()){
+
+
+document.getElementById("result").innerHTML =
+
+"❌ You already completed this exam";
+
+
+return;
+
+
+}
+
+
+
 
 
 let score=0;
@@ -434,6 +522,7 @@ score++;
 
 
 
+
 const percentage =
 
 ((score/questions.length)*100).toFixed(2);
@@ -444,23 +533,10 @@ const percentage =
 
 
 
+
 await setDoc(
 
-
-doc(
-
-db,
-
-"students",
-
-studentIndex,
-
-"examResults",
-
-examId
-
-),
-
+resultRef,
 
 {
 
@@ -506,6 +582,7 @@ Percentage : ${percentage}%
 
 
 
+
 };
 
 
@@ -516,10 +593,10 @@ Percentage : ${percentage}%
 loadQuiz();
 
 
-
 </script>
 
 
 </body>
+
 
 </html>
