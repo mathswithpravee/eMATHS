@@ -374,7 +374,12 @@ Add Video
 <input id="examTitle" placeholder="Exam Name">
 
 <br><br>
+<input 
+id="examTime" 
+type="number" 
+placeholder="Exam Time (Minutes)">
 
+<br><br>
 
 <select id="examGrade">
 
@@ -505,7 +510,12 @@ Add Question
 <input id="editExamTitle" placeholder="Exam Name">
 
 <br><br>
+<input 
+id="editExamTime" 
+type="number"
+placeholder="Exam Time (Minutes)">
 
+<br><br>
 
 <select id="editExamGrade">
 
@@ -2082,29 +2092,27 @@ alert(error.message);
 
 loadAdminVideos();
 
-// ========================
-// CREATE EXAM
-// ========================
-
-
 window.addExam = async function(){
-
 
 try{
 
 
 const title =
-document.getElementById("examTitle").value;
+document.getElementById("examTitle").value.trim();
 
 
 const grade =
 document.getElementById("examGrade").value;
 
 
+const time =
+Number(document.getElementById("examTime").value);
 
-if(title=="" || grade==""){
 
-alert("Enter Exam Name and Grade");
+
+if(title=="" || grade=="" || time<=0){
+
+alert("Enter Exam Name, Grade and Time");
 
 return;
 
@@ -2123,11 +2131,18 @@ doc(db,"exams",examId),
 
 {
 
+
 title:title,
+
 
 grade:grade,
 
+
+time:time,
+
+
 createdAt:new Date()
+
 
 }
 
@@ -2141,6 +2156,14 @@ document.getElementById("examMessage").innerHTML =
 
 
 document.getElementById("examTitle").value="";
+
+document.getElementById("examTime").value="";
+
+
+
+loadAdminExams();
+
+loadExamDropdown();
 
 
 
