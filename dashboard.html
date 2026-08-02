@@ -191,10 +191,9 @@ Loading...
 <h2>Academic</h2>
 
 
-<button>📝 Exams</button>
-
-
-<button>📊 Monthly Results</button>
+<button onclick="openExam()">
+📝 Exams
+</button>
 
 
 </div>
@@ -597,6 +596,14 @@ document.getElementById("studentName").innerHTML =
 
 
 loadStudent();
+</script>
+<script>
+
+function openExam(){
+
+window.location.href="exam.html";
+
+}
 
 
 </script>
