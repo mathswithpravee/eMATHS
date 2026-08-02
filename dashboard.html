@@ -812,17 +812,17 @@ quizTable;
 
 // CHART
 
+// CHART
 
 
-if(labels.length>0){
+const chartCanvas = document.getElementById("progressChart");
+
+
+if(labels.length > 0){
 
 
 
-new Chart(
-
-document.getElementById("progressChart"),
-
-{
+new Chart(chartCanvas,{
 
 
 type:"line",
@@ -855,7 +855,19 @@ borderWidth:3
 options:{
 
 
-responsive:true
+responsive:true,
+
+
+scales:{
+
+
+y:{
+
+
+beginAtZero:true,
+
+
+max:100
 
 
 }
@@ -864,17 +876,21 @@ responsive:true
 }
 
 
-);
+}
+
+
+});
 
 
 
 }
+else{
 
+
+console.log("No chart data found");
 
 
 }
-
-
 
 
 
