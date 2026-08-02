@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Quiz - Maths with Pravee</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+<style>
+
+body{
+font-family:Arial;
+background:#f4f7fb;
+text-align:center;
+}
+
+.header{
+background:#1e88e5;
+color:white;
+padding:20px;
+}
+
+.card{
+
+background:white;
+width:90%;
+max-width:700px;
+margin:20px auto;
+padding:20px;
+border-radius:10px;
+
+}
+
+.question{
+
+background:#eeeeee;
+padding:15px;
+margin:15px;
+border-radius:10px;
+text-align:left;
+
+}
+
+button{
+
+background:#1e88e5;
+color:white;
+border:none;
+padding:12px 25px;
+border-radius:5px;
+cursor:pointer;
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="header">
+
+<h1>📝 Quiz</h1>
+
+<h3>Maths with Pravee</h3>
+
+</div>
+
+
+
+<div class="card">
+
+
+<h2 id="examTitle">
+Loading...
+</h2>
+
+
+<form id="quizForm">
+
+</form>
+
+
+<br>
+
+
+<button onclick="submitQuiz()">
+
+Submit Quiz
+
+</button>
+
+
+<h3 id="result"></h3>
+
+
+</div>
+
+
+
+
+
+<script type="module">
+
+
+import { initializeApp }
+
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+
+import {
+
+getFirestore,
+
+doc,
+
+getDoc,
+
+collection,
+
+getDocs,
+
+setDoc
+
+}
+
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+
+
+
+
+const firebaseConfig = {
+
+
+apiKey: "AIzaSyAI-rbO_z9fzIZicTW2SlI0cj__R1Ji6GM",
+
+authDomain: "emaths-db8a2.firebaseapp.com",
+
+projectId: "emaths-db8a2",
+
+storageBucket: "emaths-db8a2.firebasestorage.app",
+
+messagingSenderId: "790474740591",
+
+appId: "1:790474740591:web:a54ea2419f29c0178a8e9a"
+
+};
+
+
+
+const app = initializeApp(firebaseConfig);
+
+const db = getFirestore(app);
+
+
+
+
+
+const examId =
+localStorage.getItem("examId");
+
+
+// Student index number
+
+const studentIndex =
+localStorage.getItem("studentIndex");
+
+
+
+let questions=[];
+
+let examName="";
+
+
+
+
+
+async function loadQuiz(){
+
+
+
+const examSnap =
+
+await getDoc(
+
+doc(db,"exams",examId)
+
+);
+
+
+
+if(examSnap.exists()){
+
+
+examName =
+examSnap.data().title;
+
+
+document.getElementById("examTitle").innerHTML =
+examName;
+
+
+}
+
+
+
+
+
+const qSnap =
+
+await getDocs(
+
+collection(
+db,
+"exams",
+examId,
+"questions"
+
+)
+
+);
+
+
+
+
+
+const form =
+
+document.getElementById("quizForm");
+
+
+
+
+
+qSnap.forEach((q,index)=>{
+
+
+const data=q.data();
+
+
+questions.push(data);
+
+
+
+form.innerHTML += `
+
+
+<div class="question">
+
+
+<h3>${index+1}. ${data.question}</h3>
+
+
+
+<label>
+
+<input type="radio" name="q${index}" value="A">
+
+A. ${data.A}
+
+</label>
+
+
+<br>
+
+
+
+<label>
+
+<input type="radio" name="q${index}" value="B">
+
+B. ${data.B}
+
+</label>
+
+
+<br>
+
+
+
+<label>
+
+<input type="radio" name="q${index}" value="C">
+
+C. ${data.C}
+
+</label>
+
+
+<br>
+
+
+
+<label>
+
+<input type="radio" name="q${index}" value="D">
+
+D. ${data.D}
+
+</label>
+
+
+
+</div>
+
+
+
+`;
+
+
+
+});
+
+
+
+}
+
+
+
+
+
+
+
+
+window.submitQuiz = async function(){
+
+
+let score=0;
+
+
+
+questions.forEach((q,index)=>{
+
+
+
+const selected =
+
+document.querySelector(
+
+`input[name="q${index}"]:checked`
+
+);
+
+
+
+if(selected && selected.value == q.answer){
+
+
+score++;
+
+}
+
+
+
+});
+
+
+
+
+
+const percentage =
+
+((score/questions.length)*100).toFixed(2);
+
+
+
+
+
+
+// Save Result
+
+
+
+await setDoc(
+
+
+doc(
+
+db,
+
+"students",
+
+studentIndex,
+
+"examResults",
+
+examId
+
+),
+
+
+{
+
+
+exam:examName,
+
+score:score,
+
+total:questions.length,
+
+percentage:Number(percentage),
+
+date:new Date()
+
+
+}
+
+
+
+);
+
+
+
+
+
+
+
+document.getElementById("result").innerHTML =
+
+
+`
+✅ Quiz Completed
+
+<br><br>
+
+Score : ${score}/${questions.length}
+
+<br>
+
+Percentage : ${percentage}%
+
+`;
+
+
+
+};
+
+
+
+
+
+
+loadQuiz();
+
+
+
+</script>
+
+
+
+</body>
+
+</html>
