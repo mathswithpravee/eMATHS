@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Online Exam - Maths with Pravee</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+<style>
+
+body{
+font-family:Arial;
+background:#f4f7fb;
+text-align:center;
+}
+
+
+.header{
+background:#1e88e5;
+color:white;
+padding:20px;
+}
+
+
+.card{
+
+background:white;
+width:90%;
+max-width:700px;
+margin:20px auto;
+padding:20px;
+border-radius:10px;
+
+}
+
+
+button{
+
+background:#1e88e5;
+color:white;
+border:none;
+padding:12px 20px;
+border-radius:5px;
+cursor:pointer;
+
+}
+
+
+.exam{
+
+background:#eeeeee;
+padding:15px;
+margin:15px;
+border-radius:10px;
+
+}
+
+
+</style>
+
+</head>
+
+
+<body>
+
+
+
+<div class="header">
+
+<h1>📝 Online Exams</h1>
+
+<h3>Maths with Pravee</h3>
+
+</div>
+
+
+
+
+<div class="card">
+
+
+<h2>Available Exams</h2>
+
+
+<div id="examList">
+
+Loading...
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+<script type="module">
+
+
+import { initializeApp }
+
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+
+
+import {
+
+getFirestore,
+
+collection,
+
+getDocs
+
+}
+
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+
+
+
+
+
+const firebaseConfig = {
+
+
+apiKey: "AIzaSyAI-rbO_z9fzIZicTW2SlI0cj__R1Ji6GM",
+
+authDomain: "emaths-db8a2.firebaseapp.com",
+
+projectId: "emaths-db8a2",
+
+storageBucket: "emaths-db8a2.firebasestorage.app",
+
+messagingSenderId: "790474740591",
+
+appId: "1:790474740591:web:a54ea2419f29c0178a8e9a"
+
+
+};
+
+
+
+
+
+
+const app = initializeApp(firebaseConfig);
+
+
+const db = getFirestore(app);
+
+
+
+
+
+
+
+async function loadExams(){
+
+
+
+const box =
+
+document.getElementById("examList");
+
+
+
+box.innerHTML="";
+
+
+
+
+const snapshot =
+
+await getDocs(
+
+collection(db,"exams")
+
+);
+
+
+
+
+
+if(snapshot.empty){
+
+
+box.innerHTML =
+
+"<h3>No Exams Available</h3>";
+
+
+return;
+
+
+}
+
+
+
+
+
+snapshot.forEach((exam)=>{
+
+
+
+const data = exam.data();
+
+
+
+
+box.innerHTML += `
+
+
+
+<div class="exam">
+
+
+<h3>${data.title}</h3>
+
+
+<p>Grade: ${data.grade}</p>
+
+
+
+<button onclick="startExam('${exam.id}')">
+
+▶ Start Quiz
+
+</button>
+
+
+
+</div>
+
+
+`;
+
+
+
+});
+
+
+
+}
+
+
+
+
+
+
+
+window.startExam = function(id){
+
+
+localStorage.setItem(
+"examId",
+id
+);
+
+
+window.location.href="quiz.html";
+
+
+};
+
+
+
+
+
+
+loadExams();
+
+
+
+
+</script>
+
+
+
+</body>
+
+</html>
