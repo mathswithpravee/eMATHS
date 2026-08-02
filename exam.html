@@ -154,7 +154,20 @@ const app = initializeApp(firebaseConfig);
 
 const db = getFirestore(app);
 
+// CHECK LOGIN
 
+const studentIndex =
+localStorage.getItem("studentIndex");
+
+const studentGrade =
+localStorage.getItem("studentGrade");
+
+
+if(!studentIndex){
+
+window.location.href="index.html";
+
+}
 
 
 
@@ -208,7 +221,11 @@ snapshot.forEach((exam)=>{
 
 
 const data = exam.data();
+if(String(data.grade) !== String(studentGrade)){
 
+return;
+
+}
 
 
 const studentGrade = 
