@@ -207,14 +207,26 @@ return;
 snapshot.forEach((exam)=>{
 
 
-
 const data = exam.data();
 
 
 
+const studentGrade = 
+localStorage.getItem("studentGrade");
+
+
+
+// Only student's grade exams show
+
+if(String(data.grade) != String(studentGrade)){
+
+return;
+
+}
+
+
 
 box.innerHTML += `
-
 
 
 <div class="exam">
@@ -226,13 +238,11 @@ box.innerHTML += `
 <p>Grade: ${data.grade}</p>
 
 
-
 <button onclick="startExam('${exam.id}')">
 
 ▶ Start Quiz
 
 </button>
-
 
 
 </div>
