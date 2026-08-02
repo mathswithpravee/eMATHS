@@ -494,7 +494,44 @@ Add Question
 
 
 </div>
-    
+<br><br>
+
+<h3>Manage Created Exams</h3>
+
+
+<input type="hidden" id="editExamId">
+
+
+<input id="editExamTitle" placeholder="Exam Name">
+
+<br><br>
+
+
+<select id="editExamGrade">
+
+<option value="">Select Grade</option>
+
+<option value="6">Grade 6</option>
+<option value="7">Grade 7</option>
+<option value="8">Grade 8</option>
+<option value="9">Grade 9</option>
+<option value="10">Grade 10</option>
+<option value="11">Grade 11</option>
+
+</select>
+
+
+<br><br>
+
+
+<button onclick="updateExam()">
+💾 Save Changes
+</button>
+
+
+<div id="examListAdmin">
+
+</div>    
 <!-- ADD MARKS -->
 
 <div class="card">
@@ -2294,6 +2331,235 @@ error.message;
 
 
 };
+// ========================
+// LOAD EXAMS ADMIN
+// ========================
+
+async function loadAdminExams(){
+
+
+const box =
+document.getElementById("examListAdmin");
+
+
+box.innerHTML="";
+
+
+const snapshot =
+await getDocs(collection(db,"exams"));
+
+
+
+snapshot.forEach((exam)=>{
+
+
+const data =
+exam.data();
+
+
+
+box.innerHTML += `
+
+
+<div style="background:#eee;padding:15px;margin:15px;border-radius:10px;">
+
+
+<h3>${data.title}</h3>
+
+
+<p>Grade: ${data.grade}</p>
+
+
+<button onclick="editExam('${exam.id}')">
+
+✏ Edit
+
+</button>
+
+
+<button onclick="deleteExam('${exam.id}')">
+
+🗑 Delete
+
+</button>
+
+
+</div>
+
+
+`;
+
+
+
+});
+
+
+}
+
+
+
+loadAdminExams();
+
+
+
+
+// ========================
+// LOAD EXAM TO EDIT FORM
+// ========================
+
+window.editExam = async function(id){
+
+
+const examSnap =
+await getDoc(doc(db,"exams",id));
+
+
+if(examSnap.exists()){
+
+
+const data =
+examSnap.data();
+
+
+document.getElementById("editExamId").value=id;
+
+document.getElementById("editExamTitle").value=data.title;
+
+document.getElementById("editExamGrade").value=data.grade;
+
+
+
+window.scrollTo({
+
+top:0,
+
+behavior:"smooth"
+
+});
+
+
+}
+
+
+};
+
+
+
+
+// ========================
+// UPDATE EXAM
+// ========================
+
+window.updateExam = async function(){
+
+
+const id =
+document.getElementById("editExamId").value;
+
+
+await updateDoc(
+
+doc(db,"exams",id),
+
+{
+
+title:
+document.getElementById("editExamTitle").value,
+
+
+grade:
+document.getElementById("editExamGrade").value
+
+
+}
+
+);
+
+
+alert("Exam Updated Successfully ✅");
+
+
+loadAdminExams();
+
+
+};
+
+
+
+
+// ========================
+// DELETE EXAM
+// ========================
+
+window.deleteExam = async function(id){
+
+
+let confirmDelete =
+confirm("Delete this exam and all questions?");
+
+
+if(!confirmDelete){
+
+return;
+
+}
+
+
+
+const questionsRef =
+collection(
+db,
+"exams",
+id,
+"questions"
+);
+
+
+
+const questionsSnap =
+await getDocs(questionsRef);
+
+
+
+for(const question of questionsSnap.docs){
+
+
+await deleteDoc(
+
+doc(
+db,
+"exams",
+id,
+"questions",
+question.id
+)
+
+);
+
+
+}
+
+
+
+
+await deleteDoc(
+
+doc(db,"exams",id)
+
+);
+
+
+
+alert("Exam and Questions Deleted Successfully ✅");
+
+
+
+loadAdminExams();
+
+
+
+};
+
     
 </script>
 
