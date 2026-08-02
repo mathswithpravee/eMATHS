@@ -402,6 +402,99 @@ Create Exam
 
 
 </div>
+<div class="card">
+
+<h2>➕ Add Quiz Question</h2>
+
+
+<select id="questionExam">
+
+<option value="">
+Select Exam
+</option>
+
+</select>
+
+
+<br><br>
+
+
+<input id="questionText" placeholder="Question">
+
+
+<br><br>
+
+
+<input id="optionA" placeholder="Option A">
+
+
+<br><br>
+
+
+<input id="optionB" placeholder="Option B">
+
+
+<br><br>
+
+
+<input id="optionC" placeholder="Option C">
+
+
+<br><br>
+
+
+<input id="optionD" placeholder="Option D">
+
+
+<br><br>
+
+
+<select id="correctAnswer">
+
+
+<option value="">
+Correct Answer
+</option>
+
+
+<option value="A">
+A
+</option>
+
+
+<option value="B">
+B
+</option>
+
+
+<option value="C">
+C
+</option>
+
+
+<option value="D">
+D
+</option>
+
+
+</select>
+
+
+<br><br>
+
+
+<button onclick="addQuestion()">
+
+Add Question
+
+</button>
+
+
+<p id="questionMessage"></p>
+
+
+</div>
+    
 <!-- ADD MARKS -->
 
 <div class="card">
@@ -2028,7 +2121,67 @@ error.message;
 
 
 };
-    
+// ========================
+// LOAD EXAMS TO QUESTION DROPDOWN
+// ========================
+
+async function loadExamDropdown(){
+
+
+const examSelect =
+document.getElementById("questionExam");
+
+
+examSelect.innerHTML =
+
+`
+<option value="">
+Select Exam
+</option>
+`;
+
+
+
+const snapshot =
+await getDocs(collection(db,"exams"));
+
+
+
+snapshot.forEach((exam)=>{
+
+
+const data =
+exam.data();
+
+
+
+let option =
+document.createElement("option");
+
+
+
+option.value =
+exam.id;
+
+
+
+option.textContent =
+data.title + " - Grade " + data.grade;
+
+
+
+examSelect.appendChild(option);
+
+
+
+});
+
+
+}
+
+
+
+loadExamDropdown();    
 </script>
 
 
