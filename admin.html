@@ -335,7 +335,27 @@ Delete Marks
 Add Video
 </button>
 <br><br>
+<input type="hidden" id="editVideoId">
 
+<input id="editVideoName" placeholder="Video Name">
+
+<br><br>
+
+<input id="editVideoLink" placeholder="YouTube Link">
+
+<br><br>
+
+<input id="editVideoThumbnail" placeholder="Thumbnail URL">
+
+<br><br>
+
+<button onclick="saveVideoChanges()">
+
+💾 Save Changes
+
+</button>
+
+<br><br>
 <h3>Added Videos</h3>
 
 <div id="videoListAdmin">
@@ -588,6 +608,7 @@ import {
 getFirestore,
 doc,
 setDoc,
+updateDoc,
 collection,
 getDocs,
 getDoc,
@@ -1696,6 +1717,100 @@ error.message;
 
 };
 // ========================
+// EDIT VIDEO
+// ========================
+
+window.editVideo = async function(id){
+
+try{
+
+const videoRef = doc(db,"videos",id);
+
+const videoSnap = await getDoc(videoRef);
+
+if(videoSnap.exists()){
+
+const data = videoSnap.data();
+
+document.getElementById("editVideoId").value = id;
+document.getElementById("editVideoName").value = data.name;
+document.getElementById("editVideoLink").value = data.link;
+document.getElementById("editVideoThumbnail").value = data.thumbnail;
+
+window.scrollTo({
+top:0,
+behavior:"smooth"
+});
+
+}
+
+}
+catch(error){
+
+alert(error.message);
+
+}
+
+};
+
+
+
+// ========================
+// SAVE VIDEO CHANGES
+// ========================
+
+window.saveVideoChanges = async function(){
+
+try{
+
+const id =
+document.getElementById("editVideoId").value;
+
+if(id==""){
+
+alert("Please select a video first.");
+
+return;
+
+}
+
+await updateDoc(
+
+doc(db,"videos",id),
+
+{
+
+name:
+document.getElementById("editVideoName").value,
+
+link:
+document.getElementById("editVideoLink").value,
+
+thumbnail:
+document.getElementById("editVideoThumbnail").value
+
+}
+
+);
+
+alert("Video Updated Successfully ✅");
+
+document.getElementById("editVideoId").value="";
+document.getElementById("editVideoName").value="";
+document.getElementById("editVideoLink").value="";
+document.getElementById("editVideoThumbnail").value="";
+
+loadAdminVideos();
+
+}
+catch(error){
+
+alert(error.message);
+
+}
+
+};
+// ========================
 // LOAD VIDEOS ADMIN
 // ========================
 
@@ -1725,31 +1840,27 @@ video.data();
 
 box.innerHTML += `
 
-
-<div style="background:#eee;padding:10px;margin:10px;border-radius:10px;">
-
-
-<h4>${data.name}</h4>
-
-
-<p>Grade: ${data.grade}</p>
-
+<div style="background:#eee;padding:15px;margin:15px;border-radius:10px;text-align:center;">
 
 <img src="${data.thumbnail}" width="200">
 
+<h3>${data.name}</h3>
 
-<br><br>
+<p><b>Grade:</b> ${data.grade}</p>
 
+<button onclick="editVideo('${video.id}')">
 
-<button onclick="deleteVideo('${video.id}')">
-
-Delete
+✏ Edit
 
 </button>
 
+<button onclick="deleteVideo('${video.id}')">
+
+🗑 Delete
+
+</button>
 
 </div>
-
 
 `;
 
